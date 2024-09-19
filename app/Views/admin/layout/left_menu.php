@@ -42,16 +42,16 @@
                 <div class="navbar-vertical-divider">
                     <hr class="navbar-vertical-hr my-2" />
                     <ul class="navbar-nav flex-column">
-                        <?php if (session()->get('admin_role') == 'superadmin') { ?>
-                            <li class="nav-item<?php if (current_url() === site_url('admin2011/setting')) { ?> active<?php } ?>">
-                                <a class="nav-link" href="<?= site_url('admin2011/setting') ?>">
-                                    <div class="d-flex align-items-center">
-                                        <span class="nav-link-icon"><i class="fas fa-tools"></i></span>
-                                        <span class="nav-link-text">Setting</span>
-                                    </div>
-                                </a>
-                            </li>
-                        <?php } ?>
+
+                        <li class="nav-item<?php if (current_url() === site_url('admin2011/setting')) { ?> active<?php } ?>">
+                            <a class="nav-link" href="<?= site_url('admin2011/setting') ?>">
+                                <div class="d-flex align-items-center">
+                                    <span class="nav-link-icon"><i class="fas fa-tools"></i></span>
+                                    <span class="nav-link-text">Setting</span>
+                                </div>
+                            </a>
+                        </li>
+
                     </ul>
                 </div>
                 <div class="navbar-vertical-divider">
