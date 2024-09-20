@@ -20,7 +20,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-lg-8">
-            <input class="form-control" id="readonly" type="text" placeholder="Readonly input here…" readonly="">
+                <input class="form-control" id="readonly" type="text" value="" readonly="">
                 <div class="row" style="margin-top: 70px;">
                     <div class="col">
                         <style>
@@ -38,7 +38,7 @@
                     </div>
 
                 </div>
-                <button class="btn btn-success mr-1 mb-1 " type="button">Absensi
+                <button class="btn btn-success mr-1 mb-1 " type="button" id="absensiBtn">Absensi
                 </button>
             </div>
         </div>
@@ -70,6 +70,57 @@
     // Attach camera here
     Webcam.attach('.my_camera');
 
+    $(document).on('click', '#absensiBtn', function() {
+        var jamNow = new Date().toLocaleTimeString(); // Mengambil waktu sekarang
+        var lokasiNow = $('#readonly').val(); // Mengambil lokasi dari input readonly yang sudah diisi dengan geolocation
+
+        // Ambil foto dari webcam
+        Webcam.snap(function(dataUri) {
+            $.ajax({
+                url: "<?= base_url('admin2011/absensi/submit') ?>", // URL menuju controller
+                type: "POST",
+                data: {
+                    id: <?= $id ? $id : 'null' ?>, // Kirim id_user yang merupakan foreign key
+                    jam_in: (isAbsenMasuk) ? jamNow : null, // Hanya kirim jam_in jika absensi masuk
+                    jam_out: (!isAbsenMasuk) ? jamNow : null, // Hanya kirim jam_out jika absensi pulang
+                    lokasi_in: (isAbsenMasuk) ? lokasiNow : null, // Hanya kirim lokasi_in jika absensi masuk
+                    lokasi_out: (!isAbsenMasuk) ? lokasiNow : null, // Hanya kirim lokasi_out jika absensi pulang
+                    foto_in: (isAbsenMasuk) ? dataUri : null, // Kirim foto_in jika absensi masuk
+                    foto_out: (!isAbsenMasuk) ? dataUri : null // Kirim foto_out jika absensi pulang
+                },
+                success: function(response) {
+                    alert(response.message);
+                },
+                error: function(xhr, status, error) {
+                    alert('Error: ' + error);
+                }
+            });
+        });
+    });
+
+    var isAbsenMasuk = true; // Inisialisasi, nanti di-update setelah pengecekan di server
+
+    $(document).ready(function() {
+        // Cek apakah user sudah absen masuk hari ini
+        $.ajax({
+            url: "<?= base_url('admin2011/absensi/checkstatus') ?>",
+            type: "POST",
+            data: {
+                id: <?= $id ?>
+            },
+            success: function(response) {
+                // Jika sudah absen masuk, maka akan melakukan absensi pulang
+                if (response.status == 'masuk') {
+                    isAbsenMasuk = false;
+                    $('#absensiBtn').text('Absensi Pulang');
+                }
+            }
+        });
+    });
+
+
+
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition);
     } else {
@@ -84,6 +135,8 @@
 
         x.value = position.coords.latitude + "," + position.coords.longitude;
 
+        var readonlyInput = document.getElementById("readonly");
+        readonlyInput.value = position.coords.latitude + "," + position.coords.longitude;
         // menampilkan map dan posisi karyawan
         var map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 19);
 

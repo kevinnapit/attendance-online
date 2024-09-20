@@ -45,7 +45,7 @@
       <a class="nav-link pr-0" id="navbarDropdownUser" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <div class="avatar avatar-xl">
           <img class="rounded-circle" src="<?php if (session()->get('admin_picture')) {
-                                              echo base_url() . getenv('dir.upload.profile') . session()->get('admin_picture') ?><?php } else {
+                                              echo base_url() . getenv('dir.upload.upload') . session()->get('admin_picture') ?><?php } else {
                                                                                                                                   echo base_url() ?>assets/img/team/avatar.png<?php } ?>" alt="Image" id="photo_profile_in_top_menu" />
         </div>
       </a>
