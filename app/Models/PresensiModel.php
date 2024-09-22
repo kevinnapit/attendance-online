@@ -12,7 +12,7 @@ class PresensiModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id','tgl_presensi','jam_in','jam_out','lokasi_in','lokasi_out','foto_in','foto_out'];
+    protected $allowedFields    = ['id', 'username', 'tgl_presensi', 'jam_in', 'jam_out', 'lokasi_in', 'lokasi_out', 'foto_in', 'foto_out'];
 
 
 
@@ -20,8 +20,8 @@ class PresensiModel extends Model
     {
         return $this->db->table('tbl_presensi')
             ->where('id_karyawan', $id_karyawan)
-            ->where('tgl_presensi',$tanggal)
+            ->where('tgl_presensi', $tanggal)
             ->get()->getRowArray();
     }
-    
+
 }

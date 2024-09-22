@@ -5,93 +5,130 @@ namespace App\Controllers\Admin2011;
 use App\Controllers\BaseController;
 use App\Models\PresensiModel;
 use App\Models\AdminModel;
+use App\Models\ModelSetting;
 
 class Absensi extends BaseController
 {
 
-    var $absensi;
+    var $absensi, $setting, $model;
     function __construct()
     {
         $this->absensi = new PresensiModel();
+        $this->setting = new ModelSetting();
+        $this->model = new AdminModel();
     }
     public function index()
     {
-        // Inisialisasi model admin
-        $adminModel = new AdminModel();
+        $tgl_hari_ini = date("Y-m-d");
+        $username = session()->get('admin_username');
+        $data['title'] = "Edit Data Admin";
+        $data['detail'] = [];
+        $data['lokasi'] = $this->setting->datakantor();
 
-        // Misalkan kita ambil admin yang sedang login (ganti dengan session id jika ada)
-        $admin = $adminModel->where('username', session()->get('username'))->first(); // ganti sesuai kondisi
-
-        // Cek jika admin ditemukan
-        if ($admin) {
-            $data = [
-                'id' => $admin['id'],
-                'lokasi' => $this->absensi->datakantor() // kirimkan id ke view
-            ];
-        } else {
-            $data = [
-                'id' => null,
-                'lokasi'=> null
-            ];
-        }
+        $data['status'] = $this->absensi->where('tgl_presensi', $tgl_hari_ini)->where('username', $username)->countAllResults();
 
         return view('admin/absensi/index', $data);
     }
     public function submit()
     {
-        $presensiModel = new PresensiModel();
+        $username = session()->get('admin_username');
+        $tgl_presensi = date("Y-m-d");
+        $jam = date("H:i:s");
+        $lokasi = $this->request->getPost('lokasi');
+        $kantor = $this->setting->datakantor();
+        $latitudekantor = 2.3275142760941683;
+        $longitudekantor =  99.05086035544811;
+        $lokasiuser = explode(",", $lokasi);
+        $latitudeuser = $lokasiuser[0];
+        $longitudeuser = $lokasiuser[1];
 
-        $userId = $this->request->getPost('id');
-        $currentDate = date('Y-m-d');
+        $jarak = $this->distance($latitudekantor, $longitudekantor, $latitudeuser, $longitudeuser);
+        $radius = round($jarak['meters']);
 
-        // Cek apakah user sudah absen masuk hari ini
-        $absenMasuk = $presensiModel->where('id', $userId)
-            ->where('tgl_presensi', $currentDate)
-            ->where('jam_in IS NOT NULL')
-            ->first();
+        $image = $this->request->getPost('image');
 
-        if ($absenMasuk && $absenMasuk['jam_out'] == null) {
-            // Absensi Pulang
-            $data = [
-                'jam_out' => $this->request->getPost('jam_out'),
-                'lokasi_out' => $this->request->getPost('lokasi_out'),
-                'foto_out' => $this->saveImage($this->request->getPost('foto_out')),
-            ];
 
-            // Update absensi pulang
-            $presensiModel->update($absenMasuk['id_presensi'], $data);
+        if (!$image || !$lokasi) {
+            return $this->response->setStatusCode(400)->setJSON(['status' => 'error', 'message' => 'Invalid data']);
+        }
 
-            return $this->response->setJSON(['status' => 'success', 'message' => 'Absensi pulang berhasil!']);
+        $folderPath = ROOTPATH . 'public/' . getenv('dir.upload.upload');
+        $image_parts = explode(";base64,", $image);
+        $image_base64 = base64_decode($image_parts[1]);
+        $fileName = uniqid() . ".png";
+        $file = $folderPath . $fileName;
+
+        $cek = $this->absensi->where('tgl_presensi', $tgl_presensi)->where('username', $username)->countAllResults();
+
+        if ($radius > 10) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Anda Berada Diluar Radius']);
         } else {
-            // Absensi Masuk
-            $data = [
-                'id' => $userId, // Foreign key user
-                'tgl_presensi' => $currentDate,
-                'jam_in' => $this->request->getPost('jam_in'),
-                'lokasi_in' => $this->request->getPost('lokasi_in'),
-                'foto_in' => $this->saveImage($this->request->getPost('foto_in')),
-            ];
 
-            // Simpan absensi masuk
-            $presensiModel->insert($data);
 
-            return $this->response->setJSON(['status' => 'success', 'message' => 'Absensi masuk berhasil!']);
+
+            if ($cek > 0) {
+                // Process "absen pulang" (update)
+                $data_pulang = [
+                    'jam_out' => $jam,
+                    'foto_out' => $fileName,
+                    'lokasi_out' => $lokasi
+                ];
+                $update = $this->absensi->where('tgl_presensi', $tgl_presensi)
+                    ->where('username', $username)
+                    ->set($data_pulang)
+                    ->update();
+
+                if ($update) {
+                    if (file_put_contents($file, $image_base64)) {
+                        return $this->response->setJSON(['status' => 'success', 'message' => 'Berhasil Absensi Pulang']);
+                    } else {
+                        return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal menyimpan file']);
+                    }
+                } else {
+                    return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal menyimpan data']);
+                }
+            } else {
+                // Process "absen masuk" (insert)
+                $data = [
+                    'username' => $username,
+                    'tgl_presensi' => $tgl_presensi,
+                    'lokasi_' => $lokasi,
+                    'jam_in' => $jam,
+                    'foto_in' => $fileName,
+                    'lokasi_in' => $lokasi
+                ];
+
+                $simpan = $this->absensi->insert($data);
+
+                if ($simpan) {
+                    if (file_put_contents($file, $image_base64)) {
+                        return $this->response->setJSON(['status' => 'success', 'message' => 'Data dan file berhasil disimpan']);
+                    } else {
+                        return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal menyimpan file']);
+                    }
+                } else {
+                    return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal menyimpan data']);
+                }
+            }
         }
     }
 
-    private function saveImage($imageData)
+
+
+    function distance($lat1, $lon1, $lat2, $lon2)
     {
-        list($type, $imageData) = explode(';', $imageData);
-        list(, $imageData) = explode(',', $imageData);
-        $imageData = base64_decode($imageData);
-
-        $fileName = uniqid() . '.jpg';
-        $filePath = WRITEPATH . 'absensi/' . $fileName;
-
-        file_put_contents($filePath, $imageData);
-
-        return $fileName;
+        $theta = $lon1 - $lon2;
+        $miles = (sin(deg2rad($lat1)) * sin(deg2rad($lat2))) + (cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta)));
+        $miles = acos($miles);
+        $miles = rad2deg($miles);
+        $miles = $miles * 60 * 1.1515;
+        $feet = $miles * 5280;
+        $yards = $feet / 3;
+        $kilometers = $miles * 1.609344;
+        $meters = $kilometers * 1000;
+        return compact('meters');
     }
+
 
     public function checkstatus()
     {

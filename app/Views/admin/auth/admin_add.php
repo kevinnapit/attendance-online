@@ -38,7 +38,7 @@
          <br>
          <span id="report"></span>
 
-         <input type="submit" name="submit" value="<?= $tombol ?>" class="btn btn-primary mt-3" />
+         <input type="submit" name="" value="<?= $tombol ?>" class="btn btn-primary mt-3" />
      </form>
  </div>
  <script>

@@ -18,7 +18,7 @@ class Setting extends BaseController
     public function index()
     {
         $data = [
-            'setting' => $this->model->datasetting()
+            'setting' => $this->model->datakantor()
         ];
         return view('admin/setting/index', $data);
     }

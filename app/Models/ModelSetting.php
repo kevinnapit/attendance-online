@@ -13,9 +13,10 @@ class ModelSetting extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = ['nama_kantor', 'alamat', 'lokasi_kantor', 'radius'];
+
     public function datakantor()
     {
-        return $this->db->table('setting')
-            ->where('id_setting', 1)->get()->getRowArray();
+        return $this->where('id_setting', 1)->get()->getRowArray();
     }
+    
 }

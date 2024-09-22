@@ -32,10 +32,12 @@ class Login extends BaseController
             }
             $akun = [
                 'admin_username' => $username,
+                'username' => $dataAkun['username'],
                 'admin_name' => $dataAkun['name'],
                 'admin_email' => $dataAkun['email'],
                 'admin_role' => $dataAkun['role'],
                 'admin_id' => $dataAkun['id'],
+
             ];
             session()->set($akun);
             return redirect()->to('admin2011/dashboard');
