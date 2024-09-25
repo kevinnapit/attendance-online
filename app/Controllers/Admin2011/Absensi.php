@@ -36,8 +36,8 @@ class Absensi extends BaseController
         $jam = date("H:i:s");
         $lokasi = $this->request->getPost('lokasi');
         $kantor = $this->setting->datakantor();
-        $latitudekantor = 2.3275142760941683;
-        $longitudekantor =  99.05086035544811;
+        $latitudekantor =2.3230957;
+        $longitudekantor =  99.0460634;
         $lokasiuser = explode(",", $lokasi);
         $latitudeuser = $lokasiuser[0];
         $longitudeuser = $lokasiuser[1];

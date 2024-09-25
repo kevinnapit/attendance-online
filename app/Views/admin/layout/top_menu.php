@@ -46,12 +46,12 @@
         <div class="avatar avatar-xl">
           <img class="rounded-circle" src="<?php if (session()->get('admin_picture')) {
                                               echo base_url() . getenv('dir.upload.upload') . session()->get('admin_picture') ?><?php } else {
-                                                                                                                                  echo base_url() ?>assets/img/team/avatar.png<?php } ?>" alt="Image" id="photo_profile_in_top_menu" />
+                                                                                                                                echo base_url() ?>assets/img/team/avatar.png<?php } ?>" alt="Image" id="photo_profile_in_top_menu" />
         </div>
       </a>
       <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="navbarDropdownUser">
         <div class="bg-white rounded-soft py-2">
-          <a class="dropdown-item font-weight-bold text-warning" href="<?php echo site_url("admin2011/dashboard") ?>"><span class="fas fa-user mr-1"></span><span><?php echo session()->get('admin_name') ?></span></a>
+          <a class="dropdown-item font-weight-bold text-warning" href="<?php echo site_url("admin2011/profile") ?>"><span class="fas fa-user mr-1"></span><span><?php echo session()->get('admin_name') ?></span></a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="<?php echo site_url("admin2011/profile") ?>">Setting Profile</a>
           <a class="dropdown-item" href="<?php echo site_url("admin2011/logout") ?>">Logout</a>
