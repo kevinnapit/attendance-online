@@ -13,7 +13,6 @@
             <input type="hidden" name="id" value="<?php if (isset($detail['id'])) echo $detail['id']; ?>" />
             <input class="form-control mb-4" id="lokasi" type="text" lokasi>
             <div class="my_camera mb-3"></div>
-
             <?php if ($status > 0) { ?>
                 <button class="btn btn-danger" id="btnAbsensi">Absensi Pulang</button>
             <?php } else { ?>
