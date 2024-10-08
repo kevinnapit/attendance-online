@@ -75,7 +75,7 @@
 
             L.marker([position.coords.latitude, position.coords.longitude]).addTo(map)
             // radius kantor
-            var circle = L.circle([2.3230957,99.0460634], {
+            var circle = L.circle([<?= $lokasi['lokasi_kantor'] ?>], {
                 color: 'red',
                 fillColor: '#f03',
                 fillOpacity: 0.5,
