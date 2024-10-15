@@ -99,15 +99,6 @@
                                 </div>
                                 Other
                             </div>
-                            <?php if (session()->get('admin_role') == 'superadmin' || (session()->get('admin_role') == 'admin')) { ?>
-                                <div class="col-4 col-sm-4 col-md-2">
-                                    <div style="border-radius: 10px; background-color: #6EC207; padding: 5px; text-align: center;">
-                                        <a href="<?= site_url('admin2011/data') ?>">
-                                            <img src="<?= base_url() ?>assets/icon/1797890_89.png" style="width: 50px; height: 50px; display: block; margin: 0 auto;" />
-                                        </a><br />Data Masyarakat Toba
-                                    </div>
-                                </div>
-                            <?php } ?>
                         </div>
                     </div>
 

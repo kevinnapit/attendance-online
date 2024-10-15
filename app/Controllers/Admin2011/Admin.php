@@ -204,4 +204,18 @@ class Admin extends BaseController
 
         echo view('admin/auth/admin_add', $data);
     }
+    function delete($id)
+    {
+        $deleted = $this->model->delete($id);
+        if ($deleted) {
+            return $this->respond([
+                'status' => 'success',
+                'message' => 'Data deleted successfully'
+            ], 200);
+        } else {
+            return $this->respond([
+                'message' => 'Ops! Id tidak valid'
+            ], 400);
+        }
+    }
 }
