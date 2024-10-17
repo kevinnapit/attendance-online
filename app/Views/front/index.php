@@ -4,16 +4,16 @@
  <?php $this->section('content'); ?>
 
  <div id="appCapsule">
-     <div class="section bg-primary" id="user-section">
-         <div id="user-detail">
-             <div class="avatar">
-                 <img src="<?= base_url() ?>/front/img/<?= $karyawan['foto_karyawan'] ?>" alt="avatar" class="imaged w64 rounded" />
-             </div>
-             <div id="user-info">
-                 <h2 id="user-name"><?= $karyawan['nama_karyawan'] ?></h2>
-                 <span id="user-role"><?= $karyawan['nama_jabatan'] ?></span>
-             </div>
-         </div>
+     <div class="section bg-secondary" id="user-section">
+     <div id="user-detail">
+        <div class="avatar">
+          <img src="assets/img/sample/avatar/avatar1.jpg" alt="avatar" class="imaged w64 rounded" />
+        </div>
+        <div id="user-info">
+          <h2 id="user-name">Admin Mobile</h2>
+          <span id="user-role">Programmer</span>
+        </div>
+      </div>
      </div>
 
      <div class="section" id="menu-section">
@@ -94,12 +94,6 @@
                          </div>
                      </div>
                  </div>
-             </div>
-         </div>
-
-         <div class="rekappresence mt-1">
-             <div class="col">
-                 <canvas id="myChart" style="min-height: 460px; height: 460px; max-height: 460px; max-width: 100%;"></canvas>
              </div>
          </div>
 
@@ -224,7 +218,7 @@
 
                      </ul>
                      <div class="tab-content" style="margin-bottom: 100px">
-                         <a href="auth/logout" class="btn btn-danger accent-graybtn-sm btn btn-block"> <i class="fas fa-sign-out-alt"></i>&nbsp; Logout</a>
+                         <a href="<?=base_url()?>admin2011/login/logout" class="btn btn-danger accent-graybtn-sm btn btn-block"> <i class="fas fa-sign-out-alt"></i>&nbsp; Logout</a>
                      </div>
                  </div>
 

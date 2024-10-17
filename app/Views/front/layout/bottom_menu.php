@@ -26,29 +26,11 @@
 </head>
 
 <body>
-  
-    <div class="appHeader bg-primary text-light">
-        <div class="left">
-            <a href="<?= base_url('home') ?>" class="headerButton goBack">
-                <i class="fas fa-arrow-left fa-2x"></i>
-            </a>
-        </div>
-        <div class="pageTitle">Masuk</div>
-        <div class="right"></div>
-    </div>
-    <div class="section full mt-2">
-        <div class="section-title">
-            Title
-        </div>
-        <div class="wide-block pt-2 pb-2">
-            Great to start
-          
-        </div>
-    </div>
+
 
     <!-- App Bottom Menu -->
     <div class="appBottomMenu">
-        <a href="#" class="item">
+        <a href="<?=base_url('home')?>" class="item">
             <div class="col">
                 <i class="fas fa-home fa-3x"></i>
                 <strong>Home</strong>
@@ -63,7 +45,7 @@
         <a href="<?= base_url('presensi') ?>" class="item">
             <div class="col">
                 <div class="action-button large label-dark">
-                    <i class="fas fa-pen text-dark fa-3x"></i>
+                    <i class="fas fa-camera text-dark fa-3x"></i>
                 </div>
             </div>
         </a>

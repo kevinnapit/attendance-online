@@ -61,7 +61,7 @@
                             </div>
                             <div class="col-4 col-sm-4 col-md-2">
                                 <div style="border-radius: 10px; background-color: #C4D7FF; padding: 5px; text-align: center;">
-                                    <a href="<?= site_url('admin2011/searching') ?>">
+                                    <a href="<?= site_url('admin2011/cutiizin') ?>">
                                         <img src="<?= base_url() ?>assets/icon/permission.png" style="width: 50px; height: 50px; display: block; margin: 0 auto;" />
                                     </a>
                                 </div>

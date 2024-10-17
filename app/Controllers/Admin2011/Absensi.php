@@ -27,7 +27,7 @@ class Absensi extends BaseController
 
         $data['status'] = $this->absensi->where('tgl_presensi', $tgl_hari_ini)->where('username', $username)->countAllResults();
 
-        return view('admin/absensi/index', $data);
+        return view('front/presensi/index', $data);
     }
     public function submit()
     {
@@ -63,9 +63,6 @@ class Absensi extends BaseController
         if ($radius > 10) {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Anda Berada Diluar Radius']);
         } else {
-
-
-
             if ($cek > 0) {
                 // Process "absen pulang" (update)
                 $data_pulang = [

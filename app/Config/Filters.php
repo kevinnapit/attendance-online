@@ -31,7 +31,6 @@ class Filters extends BaseConfig
         'secureheaders' => SecureHeaders::class,
         'admin' => AdminFilter::class,
         'noadmin' => NoAdminFilter::class,
-        'filterkaryawan' => Karyawan::class,
     ];
 
     /**
@@ -42,25 +41,10 @@ class Filters extends BaseConfig
      */
     public array $globals = [
         'before' => [
-            'filterkaryawan' => [
-                'except' => [
-                    '/',
-                    'Auth','Auth/*',
-                    'admin2011','admin2011/*'
-                ]
-            ]
         ],
         'after' => [
             'toolbar',
-            'filterkaryawan' => [
-                'except' => [
-                    'admin2011','admin2011/*',
-                    'home', 'Home/*',
-                    'presensi', 'presensi/*',
-                    
-                   
-                ]
-            ]
+           
         ],
     ];
 

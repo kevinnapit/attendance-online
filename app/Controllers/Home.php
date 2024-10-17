@@ -17,6 +17,6 @@ class Home extends BaseController
             'menu' => 'home',
             'karyawan' => $this->model->datakaryawan()
         ];
-        return view('front/index',$data);
+        return view('front/index');
     }
 }

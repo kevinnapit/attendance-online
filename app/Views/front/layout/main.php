@@ -13,20 +13,22 @@
     <title>Mobilekit Mobile UI Kit</title>
     <meta name="description" content="Mobilekit HTML Mobile UI Kit" />
     <meta name="keywords" content="bootstrap 4, mobile template, cordova, phonegap, mobile, html" />
-    <link rel="icon" type="image/png" href="<?= base_url() ?>/front/assets/img/favicon.png" sizes="32x32" />
-    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url() ?>/front/assets/img/icon/192x192.png" />
-    <link rel="stylesheet" href="<?= base_url() ?>/front/assets/css/inc/bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" href="<?= base_url() ?>/front/assets/css/inc/owl-carousel/owl.carousel.min.css" />
-    <link rel="stylesheet" href="<?= base_url() ?>/front/assets/css/inc/owl-carousel/owl.theme.default.css" />
+    <link rel="icon" type="image/png" href="<?= base_url() ?>/front/img/favicon.png" sizes="32x32" />
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url() ?>/front/img/icon/192x192.png" />
+    <link rel="stylesheet" href="<?= base_url() ?>/front/css/inc/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="<?= base_url() ?>/front/css/inc/owl-carousel/owl.carousel.min.css" />
+    <link rel="stylesheet" href="<?= base_url() ?>/front/css/inc/owl-carousel/owl.theme.default.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,700&display=swap" />
-    <link rel="stylesheet" href="<?= base_url() ?>/front/assets/fontawesome-free/css/all.min.css" />
-    <link rel="stylesheet" href="<?= base_url() ?>/front/assets/css/style.css" />
+    <link rel="stylesheet" href="<?= base_url() ?>/front/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="<?= base_url() ?>/front/css/style.css" />
     <!-- webcam -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.js" integrity="sha512-AQMSn1qO6KN85GOfvH6BWJk46LhlvepblftLHzAv1cdIyTWPBKHX+r+NOXVVw6+XQpeW4LJk/GTmoP48FLvblQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <!-- leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    </style>
 </head>
 
 <body>
@@ -35,50 +37,14 @@
 
         <div class="container-fluid" data-layout="container">
             <div class="content">
+                <?= $this->include('front/layout/top_menu') ?>
 
                 <!-- Render the content section -->
+                <?= $this->include('front/layout/bottom_menu') ?>
 
 
                 <?= $this->renderSection('content') ?>
 
-                <?php if (isset($page)) : ?>
-                    <?= $this->include($page) ?>
-                <?php endif; ?>
-                <!-- App Bottom Menu -->
-                <div class="appBottomMenu">
-                    <a href="#" class="item">
-                        <div class="col">
-                            <i class="fas fa-home fa-3x"></i>
-                            <strong>Home</strong>
-                        </div>
-                    </a>
-                    <a href="#" class="item active">
-                        <div class="col">
-                            <i class="fas fa-calendar-alt fa-3x"></i>
-                            <strong>Calendar</strong>
-                        </div>
-                    </a>
-                    <a href="<?= base_url('presensi') ?>" class="item">
-                        <div class="col">
-                            <div class="action-button large label-dark">
-                                <i class="fas fa-camera text-dark fa-3x"></i>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="item">
-                        <div class="col">
-                            <i class="fas fa-file-alt fa-3x"></i>
-                            <strong>Docs</strong>
-                        </div>
-                    </a>
-                    <a href="javascript:;" class="item">
-                        <div class="col">
-                            <i class="fas fa-user-tie fa-3x"></i>
-                            <strong>Profile</strong>
-                        </div>
-                    </a>
-                </div>
-                <!-- * App Bottom Menu -->
             </div>
         </div>
     </main>
@@ -91,22 +57,22 @@
 
 <!-- ///////////// Js Files ////////////////////  -->
 <!-- Jquery -->
-<script src="<?= base_url() ?>/front/assets/js/lib/jquery-3.4.1.min.js"></script>
+<script src="<?= base_url() ?>/front/js/lib/jquery-3.4.1.min.js"></script>
 <!-- Bootstrap-->
-<script src="<?= base_url() ?>/front/assets/js/lib/popper.min.js"></script>
-<script src="<?= base_url() ?>/front/assets/js/lib/bootstrap.min.js"></script>
+<script src="<?= base_url() ?>/front/js/lib/popper.min.js"></script>
+<script src="<?= base_url() ?>/front/js/lib/bootstrap.min.js"></script>
 <!-- Chart JS -->
-<script src="<?= base_url() ?>/front/assets/chart/dist/chart.js"></script>
+<script src="<?= base_url() ?>/front/chart/dist/chart.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
 <!-- Owl Carousel -->
-<script src="<?= base_url() ?>/front/assets/js/plugins/owl-carousel/owl.carousel.min.js"></script>
+<script src="<?= base_url() ?>/front/js/plugins/owl-carousel/owl.carousel.min.js"></script>
 <!-- jQuery Circle Progress -->
-<script src="<?= base_url() ?>/front/assets/js/plugins/jquery-circle-progress/circle-progress.min.js"></script>
+<script src="<?= base_url() ?>/front/js/plugins/jquery-circle-progress/circle-progress.min.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 <!-- Base Js File -->
-<script src="<?= base_url() ?>/front/assets/js/base.js"></script>
+<script src="<?= base_url() ?>/front/js/base.js"></script>
 
 <script>
     const ctx = document.getElementById('myChart');

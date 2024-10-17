@@ -1,114 +1,128 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#000000">
-    <title>Absensi</title>
-    <meta name="description" content="Mobilekit HTML Mobile UI Kit">
-    <meta name="keywords" content="bootstrap 4, mobile template, cordova, phonegap, mobile, html" />
-    <link rel="stylesheet" href="<?= base_url() ?>/front/assets/css/inc/bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" href="<?= base_url() ?>/front/assets/css/inc/owl-carousel/owl.carousel.min.css" />
-    <link rel="stylesheet" href="<?= base_url() ?>/front/assets/css/inc/owl-carousel/owl.theme.default.css" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,700&display=swap" />
-    <link rel="stylesheet" href="<?= base_url() ?>/front/assets/fontawesome-free/css/all.min.css" />
-    <link rel="stylesheet" href="<?= base_url() ?>/front/assets/css/style.css" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>Modren Attendance</title>
+
+
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url() ?>favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url() ?>favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url() ?>favicon/favicon-16x16.png">
+    <link rel="manifest" href="<?= base_url() ?>favicon/site.webmanifest">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <script src="<?php echo base_url() ?>assets/js/config.navbar-vertical.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="<?php echo base_url() ?>assets/lib/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet">
+    <link href="<?php echo base_url() ?>assets/css/theme.css" rel="stylesheet">
 
 </head>
 
-<body class="bg-white">
 
-    <!-- loader -->
-    <div id="loader">
-        <div class="spinner-border text-primary" role="status"></div>
-    </div>
-    <!-- * loader -->
+<body>
+
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+    <main class="main" id="top">
 
 
-    <!-- App Capsule -->
-    <div id="appCapsule" class="pt-0">
+        <div class="container" data-layout="container">
+            <div class="row flex-center min-vh-100 py-6">
+                <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+                    <div class="card">
+                        <div class="card-body p-4 p-sm-5">
+                            <!-- <img src="<?php echo base_url() ?>assets/img/logos/logos.png" alt="" /> -->
+                            <a class="d-flex flex-center mb-4" href="<?= site_url('auth/login') ?>"><img class="mr-2" src="<?php echo base_url() ?>assets/img/logos/golo.png" alt="" width="345px" /></a>
 
-        <div class="login-form mt-1">
-            <div class="section">
-                <img src="<?= base_url() ?>/front/img/salam.jpg" alt="image" class="form-image">
-            </div>
-            <div class="section mt-1">
-                <h1>Login</h1>
+                            <?php
+                            $session = \Config\Services::session();
+                            if ($session->getFlashdata('warning')) {
+                            ?>
+                                <?php
+                                foreach ($session->getFlashdata('warning') as $val) {
+                                ?><div class="alert alert-danger alert-dismissible mb-1 fade show" role="alert"><?= $val ?>
+                                        <button class="close" type="button" data-dismiss="alert" aria-label="Close"><span class="font-weight-light" aria-hidden="true">×</span></button>
+                                    </div>
+                                <?php
+                                }
+                                ?>
+                            <?php
+                            }
+                            if ($session->getFlashdata('success')) {
+                            ?>
+                                <div class="alert alert-success"><?php echo $session->getFlashdata('success') ?></div>
+                            <?php
+                            }
+                            ?>
 
-            </div>
-            <div class="section mt-1 mb-5">
-                <?php
-                $errors = validation_errors();
-
-                if (session()->get('pesan')) {
-                    echo '<div class="alert alert-danger">';
-                    echo session()->get('pesan');
-                    echo '</div>';
-                }
-
-                ?>
-                <?php echo form_open('auth/ceklogin_karyawan') ?>
-
-                <div class="form-group boxed">
-                    <div class="input-wrapper">
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Username">
-                        <i class="fas fa-times-circle clear-input"></i>
+                            <div class="row text-left justify-content-between align-items-center mb-2">
+                                <div class="col-auto">
+                                    <h5>Log in</h5>
+                                </div>
+                            </div>
+                            <form method="POST" action="<?php echo site_url('auth/login') ?>">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="username" placeholder="Username" value="<?php if ($session->getFlashdata('username')) echo $session->getFlashdata('username') ?>" />
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" type="password" name="password" placeholder="Password" />
+                                </div>
+                                <div class="row justify-content-between align-items-center">
+                                    <div class="col-auto">
+                                        <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input" type="checkbox" id="basic-checkbox" name="remember_me" value="1" />
+                                            <label class="custom-control-label" for="basic-checkbox">Remember me</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto"><a class="fs--1" href="<?php echo site_url('admin2011/forgotpassword') ?>">Forgot Password?</a></div>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary btn-block mt-3" type="submit" name="submit">Log in</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <p class="text text-danger"><?= isset($errors['username']) == isset($errors['username']) ? validation_show_error('username') : '' ?></p>
                 </div>
-
-                <div class="form-group boxed">
-                    <div class="input-wrapper">
-                        <input type="password" class="form-control" id="password1" name="password" placeholder="Password">
-                        <i class="fas fa-times-circle clear-input"></i>
-                    </div>
-                    <p class="text text-danger"><?= isset($errors['password']) == isset($errors['password']) ? validation_show_error('password') : '' ?></p>
-                </div>
-
-                <div class="form-links mt-2">
-                    <div>
-                        <a href="page-register.html">Daftar</a>
-                    </div>
-                    <div><a href="page-forgot-password.html" class="text-muted">Forgot Password?</a></div>
-                </div>
-
-                <div class="form-button-group">
-                    <button type="submit" class="btn btn-primary btn-block btn-lg">Log in</button>
-                </div>
-
-
-                <?php echo form_close() ?>
             </div>
         </div>
+    </main>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
 
 
-    </div>
-    <!-- * App Capsule -->
 
 
-
-    <!-- ///////////// Js Files ////////////////////  -->
-    <!-- Jquery -->
-    <script src="<?= base_url() ?>/front/assets/js/lib/jquery-3.4.1.min.js"></script>
-    <!-- Bootstrap-->
-    <script src="<?= base_url() ?>/front/assets/js/lib/popper.min.js"></script>
-    <script src="<?= base_url() ?>/front/assets/js/lib/bootstrap.min.js"></script>
-    <!-- Chart JS -->
-    <script src="<?= base_url() ?>/front/assets/chart/dist/chart.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
-    <!-- Owl Carousel -->
-    <script src="<?= base_url() ?>/front/assets/js/plugins/owl-carousel/owl.carousel.min.js"></script>
-    <!-- jQuery Circle Progress -->
-    <script src="<?= base_url() ?>/front/assets/js/plugins/jquery-circle-progress/circle-progress.min.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
-    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
-    <!-- Base Js File -->
-    <script src="<?= base_url() ?>/front/assets/js/base.js"></script>
-
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+    <script src="<?php echo base_url() ?>assets/js/jquery.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/js/popper.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/js/bootstrap.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/lib/@fortawesome/all.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/lib/stickyfilljs/stickyfill.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/lib/sticky-kit/sticky-kit.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/lib/is_js/is.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/lib/lodash/lodash.min.js"></script>
+    <script src="<?php echo base_url() ?>assets/lib/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:100,200,300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
+    <script src="<?php echo base_url() ?>assets/js/theme.js"></script>
 
 </body>
 

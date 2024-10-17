@@ -30,6 +30,8 @@ class Login extends BaseController
                 $err[] = "Ops! Terjadi kesalahan";
                 return redirect()->to('admin2011/login');
             }
+
+            // Set session data
             $akun = [
                 'admin_username' => $username,
                 'username' => $dataAkun['username'],
@@ -37,15 +39,21 @@ class Login extends BaseController
                 'admin_email' => $dataAkun['email'],
                 'admin_role' => $dataAkun['role'],
                 'admin_id' => $dataAkun['id'],
-
+                'user_id' => $dataAkun['id']
             ];
             session()->set($akun);
-            return redirect()->to('admin2011/dashboard');
+
+            // Cek role dan redirect
+            if ($dataAkun['role'] == 'admin') {
+                return redirect()->to('admin2011/dashboard');
+            } elseif ($dataAkun['role'] == 'user') {
+                return redirect()->to('home/index');
+            }
         }
+
         $data = [];
 
         if ($this->request->getMethod() == 'post') {
-
             $rules = [
                 'username' => [
                     'rules' => 'required',
@@ -65,6 +73,7 @@ class Login extends BaseController
                 session()->setFlashdata("warning", $this->validation->getErrors());
                 return redirect()->to("admin2011/login");
             }
+
             $username = $this->request->getVar('username');
             $password = $this->request->getVar('password');
             $remember_me = $this->request->getVar('remember_me');
@@ -76,6 +85,7 @@ class Login extends BaseController
                 session()->setFlashdata('warning', $err);
                 return redirect()->to("admin2011/login");
             }
+
             if (!password_verify($password, $dataAkun['password'])) {
                 $err[] = "Password yang di masukkan salah.";
                 session()->setFlashdata('username', $username);
@@ -83,24 +93,34 @@ class Login extends BaseController
                 return redirect()->to("admin2011/login");
             }
 
+            // Set cookie if remember_me is checked
             if ($remember_me == '1') {
                 set_cookie("admin_cookie_username", $username, 3600 * 24 * 30);
                 set_cookie("admin_cookie_password", $password, 3600 * 24 * 30);
             }
 
+            // Set session data
             $akun = [
                 'admin_username' => $dataAkun['username'],
                 'admin_name' => $dataAkun['name'],
                 'admin_email' => $dataAkun['email'],
                 'admin_role' => $dataAkun['role'],
                 'admin_id' => $dataAkun['id'],
-                'admin_picture' => $dataAkun['picture'],
+                'user_id' => $dataAkun['id']
             ];
             session()->set($akun);
-            return redirect()->to("admin2011/dashboard")->withCookies();
+
+            // Cek role dan redirect
+            if ($dataAkun['role'] == 'admin') {
+                return redirect()->to('admin2011/dashboard');
+            } elseif ($dataAkun['role'] == 'user') {
+                return redirect()->to('home/index');
+            }
         }
+
         echo view("admin/auth/login", $data);
     }
+
 
     function logout()
     {
