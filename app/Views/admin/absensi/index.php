@@ -32,16 +32,7 @@
 
 <?php $this->section('script') ?>
 <script>
-    // Fungsi Inisialisasi Kamera
-    function initCamera() {
-        Webcam.set({
-            width: 420,
-            height: 340,
-            image_format: 'jpeg',
-            jpeg_quality: 90
-        });
-        Webcam.attach('.my_camera');
-    }
+
 
     $(document).ready(function() {
         // Inisialisasi kamera
@@ -57,8 +48,6 @@
             navigator.geolocation.getCurrentPosition(showPosition);
         } else {
             alert("Geolocation is not supported by this browser");
-            // document.getElementById("demo").innerHTML =
-            //     "Geolocation is not supported by this browser.";
         }
 
         function showPosition(position) {

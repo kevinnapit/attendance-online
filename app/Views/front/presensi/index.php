@@ -1,105 +1,135 @@
 <?php $this->extend('front/layout/main') ?>
-
 <?php $this->section('content') ?>
-
-<div class="container my-4">
-    <!-- Form Absensi -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Form Absensi</h5>
+<div class="container mt-5">
+    <!-- Attendance Card -->
+    <div class="card">
+        <div class="card-header text-center bg-primary text-white">
+            <h3>Attendance</h3>
         </div>
         <div class="card-body">
-            <form id="add_submit">
-                <!-- Hidden ID -->
+            <form id="attendanceForm">
+                <!-- Webcam -->
                 <input type="hidden" name="id" value="<?php if (isset($detail['id'])) echo $detail['id']; ?>" />
-
-                <!-- Lokasi Input -->
-                <div class="form-group mb-3">
-                    <label for="lokasi" class="form-label">Lokasi</label>
-                    <input class="form-control" id="lokasi" type="text" name="lokasi" placeholder="Masukkan lokasi" readonly />
+                <div class="mb-3 text-center">
+                    <div id="my_camera" class="border mb-3" style="width: 320px; height: 240px;"></div>
+                    <button type="submit" id="btnAbsensi" class="btn btn-success">Absensi Masuk</button>
+                    <input type="hidden" name="image" id="imageInput">
                 </div>
 
-                <!-- Camera Section -->
-                <div class="my_camera mb-3 border rounded p-3 bg-light text-center">
-                    <p>Kamera di sini</p>
+                <!-- Location -->
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="lokasi" readonly>
                 </div>
 
-                <!-- Absensi Button -->
-                <div class="d-grid gap-2">
-                    <?php if ($status > 0) { ?>
-                        <button class="btn btn-danger text-center" id="btnAbsensi">Absensi Pulang</button>
-                    <?php } else { ?>
-                        <button class="btn btn-primary text-center" id="btnAbsensi">Absensi Masuk</button>
-                    <?php } ?>
-                </div>
+                <!-- Map Preview -->
+                <div id="map" style="height: 250px;" class="mb-3"></div>
             </form>
         </div>
     </div>
-
-    <!-- Map Section -->
-    <div class="card shadow-sm">
-        <div class="card-header bg-secondary text-white">
-            <h5 class="mb-0">Lokasi Absensi</h5>
-        </div>
-        <div class="card-body p-0">
-            <div id="map" style="width: 100%; height: 250px;"></div>
-        </div>
-    </div>
 </div>
-
 <?php $this->endSection() ?>
 <?php $this->section('script') ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-
 <script>
-    // Inisialisasi Kamera
-    Webcam.set({
-        width: 320,
-        height: 240,
-        image_format: 'jpeg',
-        jpeg_quality: 90
-    });
+    $(document).ready(function() {
+        // Inisialisasi kamera
+        Webcam.set({
+            width: 420,
+            height: 340,
+            image_format: 'jpeg',
+            jpeg_quality: 90
+        });
+        Webcam.attach('my_camera');
 
-    Webcam.attach('.my_camera');
-
-    // Inisialisasi Geolocation
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, showError);
-    } else {
-        alert("Geolocation is not supported by this browser.");
-    }
-
-    function showPosition(position) {
-        var lokasiField = document.getElementById("lokasi");
-        lokasiField.value = position.coords.latitude + ", " + position.coords.longitude;
-
-        // Tampilkan peta
-        var map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 15);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        L.marker([position.coords.latitude, position.coords.longitude]).addTo(map)
-            .bindPopup('Lokasi Anda').openPopup();
-    }
-
-    function showError(error) {
-        switch (error.code) {
-            case error.PERMISSION_DENIED:
-                alert("User denied the request for Geolocation.");
-                break;
-            case error.POSITION_UNAVAILABLE:
-                alert("Location information is unavailable.");
-                break;
-            case error.TIMEOUT:
-                alert("The request to get user location timed out.");
-                break;
-            case error.UNKNOWN_ERROR:
-                alert("An unknown error occurred.");
-                break;
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            alert("Geolocation is not supported by this browser");
         }
-    }
+
+        function showPosition(position) {
+            var x = document.getElementById("lokasi");
+
+            x.value = position.coords.latitude + "," + position.coords.longitude;
+
+            // menanpikan map dan posisi karyawan
+            var map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 19);
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            L.marker([position.coords.latitude, position.coords.longitude]).addTo(map)
+            // radius kantor
+            var circle = L.circle([<?= $lokasi['lokasi_kantor'] ?>], {
+                color: 'red',
+                fillColor: '#f03',
+                fillOpacity: 0.5,
+                radius: <?= $lokasi['radius'] ?> //====> Radius dalam meter
+
+
+            }).addTo(map);
+            // posisi kantor
+
+            var kantoricon = L.icon({
+                iconUrl: '<?= base_url('front/img/building.png') ?>',
+
+                iconSize: [38, 95], // size of the icon
+                shadowSize: [50, 64], // size of the shadow
+                iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+                popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+            });
+            L.marker([<?= $lokasi['lokasi_kantor'] ?>], {
+                    icon: kantoricon
+                }).addTo(map)
+                .bindPopup("KOMINFO TOBA")
+                .openPopup();
+
+        }
+
+    });
+    $('#btnAbsensi').click(function(e) {
+        e.preventDefault();
+
+        Webcam.snap(function(uri) {
+            var image = uri; // Ambil gambar dari webcam
+            var lokasi = $("#lokasi").val(); // Ambil nilai lokasi
+
+            $.ajax({
+                type: 'POST',
+                url: '<?= site_url('Presensi/submit') ?>',
+                data: {
+                    image: image, // Kirim gambar dalam format base64
+                    lokasi: lokasi //kirim lokasi
+                },
+                cache: false,
+                success: function(response) {
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            title: "Success",
+                            text: response.message,
+                            icon: "success"
+                        }).then(() => {
+                            // Redirect setelah berhasil absen
+                            window.location.href = '<?= site_url('home') ?>';
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: response.message,
+                            icon: "error"
+                        });
+                    }
+                },
+                error: function(error) {
+                    Swal.fire({
+                        title: "Gagal",
+                        text: "Silahkan Hubungi IT",
+                        icon: "error"
+                    });
+                }
+            });
+        });
+    });
 </script>
 <?php $this->endSection() ?>
