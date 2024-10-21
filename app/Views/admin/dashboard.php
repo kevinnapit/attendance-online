@@ -110,3 +110,7 @@
     </div>
 </div>
 <?php $this->endSection() ?>
+<?php $this->section('script') ?>
+
+
+<?php $this->endSection('script') ?>

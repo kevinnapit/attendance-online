@@ -9,7 +9,7 @@
                 <img src="assets/img/sample/avatar/avatar1.jpg" alt="avatar" class="imaged w64 rounded" />
             </div>
             <div id="user-info">
-                <h2 id="user-name">Admin Mobile</h2>
+                <h2 id="user-name">Admin test</h2>
                 <span id="user-role">Programmer</span>
             </div>
         </div>
@@ -222,6 +222,10 @@
 
 
                     </ul>
+                    <button class="btn btn-danger w-100 text-center">
+                        <a href="<?= base_url('auth/logout') ?>" class="text-white text-decoration-none">Logout</a>
+                    </button>
+
                 </div>
                 <div class="tab-pane fade" id="profile" role="tabpanel">
                     <ul class="listview image-listview">
@@ -277,6 +281,9 @@
 <?php $this->endSection() ?>
 <?php $this->Section('script') ?>
 <script>
+    function logout() {
+
+    }
     // Function to start camera
     function startCamera() {
         const videoElement = document.getElementById('videoElement');

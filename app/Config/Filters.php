@@ -11,6 +11,7 @@ use CodeIgniter\Filters\Honeypot;
 use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\SecureHeaders;
 use CodeIgniter\Filters\FilterInterface;
+use App\Filters\HomeAccess;
 use App\Filters\Karyawan;
 
 
@@ -31,6 +32,7 @@ class Filters extends BaseConfig
         'secureheaders' => SecureHeaders::class,
         'admin' => AdminFilter::class,
         'noadmin' => NoAdminFilter::class,
+        'homeAccess' => \App\Filters\HomeAccess::class,
     ];
 
     /**
@@ -73,7 +75,8 @@ class Filters extends BaseConfig
      * @var array<string, array<string, list<string>>>
      */
     public array $filters = [
+        
         'admin' => ['before' => ['admin2011/*']],
-        // 'login' => ['before' => ['report', 'user']]
+        'user' => ['before' => ['front/*']]
     ];
 }

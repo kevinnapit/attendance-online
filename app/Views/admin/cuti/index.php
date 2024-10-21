@@ -49,6 +49,7 @@
 <?php $this->endsection() ?>
 <?php $this->section('script') ?>
 
+
 <script>
     function dataindex() {
         $('#table_index').DataTable({
@@ -99,13 +100,13 @@
             // 'buttons':[
             //   'copy','csv','excel','pdf','print'
             // ],	
-        'order': [
-            [2, 'desc']
-        ],
-        'language': {
-            'emptyTable': 'Belum ada data'
-        },
-        'destroy': true,
+            'order': [
+                [2, 'desc']
+            ],
+            'language': {
+                'emptyTable': 'Belum ada data'
+            },
+            'destroy': true,
         });
     }
 
@@ -121,7 +122,7 @@
         $("#click_yes").off("click").on("click", function() {
             $.ajax({
                 type: 'DELETE',
-                url: "<?= site_url('admin2011/admin/delete') ?>/" + iddata,
+                url: "<?= site_url('admin2011/cutiizin/delete') ?>/" + iddata,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -154,5 +155,53 @@
             });
         });
     }
+</script>
+<script>
+    // Enable Pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('bd956035076f87400396', {
+        cluster: 'ap1'
+    });
+
+    // Channel untuk User (User Notification)
+    var userChannel = pusher.subscribe('izin-channel');
+    userChannel.bind('izin-added', function(data) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Notifikasi Izin',
+            text: data.message,
+            showConfirmButton: true
+        });
+    });
+
+    userChannel.bind('izin-updated', function(data) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Notifikasi Izin',
+            text: data.message,
+            showConfirmButton: true
+        });
+    });
+
+    // Channel untuk Admin (Admin Notification)
+    var adminChannel = pusher.subscribe('admin-channel');
+    adminChannel.bind('izin-for-admin', function(data) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Notifikasi Izin untuk Admin',
+            text: data.message,
+            showConfirmButton: true
+        });
+    });
+
+    adminChannel.bind('izin-updated-for-admin', function(data) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Notifikasi Pembaruan Izin untuk Admin',
+            text: data.message,
+            showConfirmButton: true
+        });
+    });
 </script>
 <?php $this->endsection() ?>

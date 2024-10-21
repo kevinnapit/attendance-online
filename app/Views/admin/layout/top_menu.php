@@ -34,6 +34,7 @@
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownNotification">
         <div id="notification-container" class="notification-container">
           <!-- Notifications will be appended here -->
+
         </div>
       </div>
     </li>
@@ -60,3 +61,31 @@
     </li>
   </ul>
 </nav>
+<script>
+  $(document).ready(function() {
+    $.ajax({
+      url: '<?= site_url('admin2011/getNotifications') ?>',
+      method: 'GET',
+      success: function(data) {
+        var notifications = data; // Data berupa array notifikasi
+        var notificationContainer = $('#notification-container');
+        var notificationCount = $('#notification-count');
+
+        // Kosongkan kontainer notifikasi terlebih dahulu
+        notificationContainer.empty();
+
+        // Tambahkan setiap notifikasi ke dropdown
+        notifications.forEach(function(notification) {
+          notificationContainer.append(
+            '<div class="notification-item">' +
+            '<strong>' + notification.username + ':</strong> ' + notification.message +
+            '</div>'
+          );
+        });
+
+        // Update jumlah notifikasi
+        notificationCount.text(notifications.length);
+      }
+    });
+  });
+</script>

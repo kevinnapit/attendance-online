@@ -8,14 +8,32 @@ use App\Models\AdminModel;
 use App\Models\ModelSetting;
 use App\Models\LeavesModel;
 use CodeIgniter\API\ResponseTrait;
+use Pusher\Pusher;
+use GuzzleHttp\Client;
 
 class CutiIzin extends BaseController
 {
     use ResponseTrait;
-    var $model;
+    var $model, $pusher;
     function __construct()
     {
         $this->model = new LeavesModel();
+        $options = array(
+            'cluster' => 'ap1',
+            'useTLS' => true,
+        );
+
+        $httpClient = new Client([
+            'verify' => false,
+        ]);
+
+        $this->pusher = new Pusher(
+            'bd956035076f87400396',  // Key
+            '95b71ece56d85c045500',  // Secret
+            '1883397',               // App ID
+            $options,
+            $httpClient
+        );
     }
     public function index()
     {
@@ -35,14 +53,11 @@ class CutiIzin extends BaseController
         $columnSortOrder = $request->getVar('order')[0]['dir']; // asc or desc
         $searchValue = $request->getVar('search')['value']; // Search value
 
-        // Dapatkan user_id dari session (misalnya)
         $userId = session()->get('user_id'); // Pastikan session ini sudah diset saat login
 
         $db = db_connect();
 
-        // Cek apakah user adalah superadmin (user_id == 1)
         if ($userId == 1) {
-            // Superadmin dapat melihat semua data
             $totalRecords = $db->table('leaves')->countAll();
 
             $builder = $db->table('leaves')
@@ -54,7 +69,6 @@ class CutiIzin extends BaseController
                 ->orLike('leaves.start_date', $searchValue)
                 ->groupEnd();  // End group for search condition
         } else {
-            // Selain superadmin hanya dapat melihat data mereka sendiri
             $totalRecords = $db->table('leaves')
                 ->where('user_id', $userId) // Batasi hanya untuk user yang sedang login
                 ->countAllResults();
@@ -70,10 +84,8 @@ class CutiIzin extends BaseController
                 ->groupEnd();  // End group for search condition
         }
 
-        // Hitung total data setelah filtering
         $totalRecordsWithFilter = $builder->countAllResults(false); // False to prevent query execution
 
-        // Fetch records dengan limit dan order
         $orderBy = ($columnName == '') ? 'leaves.id DESC' : $columnName . ' ' . $columnSortOrder;
         $data = $builder
             ->select('leaves.*, tb_admin.name') // Select kolom yang diperlukan
@@ -81,8 +93,6 @@ class CutiIzin extends BaseController
             ->limit($rowperpage, $row)
             ->get()
             ->getResult();
-
-        // Siapkan response
         $response = [
             'draw' => intval($draw),
             'iTotalRecords' => $totalRecords, // Total records tanpa filtering
@@ -113,7 +123,7 @@ class CutiIzin extends BaseController
     }
 
 
-    function submitdata()
+    public function submitdata()
     {
         $action = $this->request->getVar('action');
         $rules = [
@@ -142,6 +152,7 @@ class CutiIzin extends BaseController
                 ]
             ]
         ];
+
         if (!$this->validate($rules)) {
             $errors = $this->validator->getErrors();
             return $this->respond(['errors' => $errors], 400);
@@ -150,36 +161,70 @@ class CutiIzin extends BaseController
         switch ($action) {
             case "add":
                 $user_id = session()->get('user_id');
-                $requestData = array(
+                $requestData = [
                     'user_id'    => $user_id,
-                    'type' => $this->request->getVar('type'),
+                    'type'       => $this->request->getVar('type'),
                     'start_date' => $this->request->getVar('start_date'),
-                    'end_date' => $this->request->getVar('end_date'),
-                    'reason' => $this->request->getVar('reason'),
+                    'end_date'   => $this->request->getVar('end_date'),
+                    'reason'     => $this->request->getVar('reason'),
+                ];
 
-                );
                 $this->model->insert($requestData);
+
+                // Kirim notifikasi menggunakan Pusher
+                $data['message'] = 'Izin baru telah diajukan oleh user ID ' . $user_id;
+                $this->pusher->trigger('izin-channel', 'izin-added', $data);
 
                 return $this->respond([
                     'status' => 'success',
                     'message' => 'Data inserted successfully'
                 ], 200);
+
             case "update":
                 $user_id = session()->get('user_id');
-                $requestData = array(
+                $requestData = [
                     'user_id'    => $user_id,
-                    'type' => $this->request->getVar('type'),
+                    'type'       => $this->request->getVar('type'),
                     'start_date' => $this->request->getVar('start_date'),
-                    'end_date' => $this->request->getVar('end_date'),
-                    'reason' => $this->request->getVar('reason'),
+                    'end_date'   => $this->request->getVar('end_date'),
+                    'reason'     => $this->request->getVar('reason'),
+                ];
 
-                );
                 $detail = $this->model->find($this->request->getVar('id'));
-                $this->model->update($detail['id'], $requestData);
-                return $this->respond([
-                    'status' => 'success',
-                    'message' => 'Data updated successfully'
-                ], 200);
+                if ($detail) {
+                    $this->model->update($detail['id'], $requestData);
+
+                    // Kirim notifikasi menggunakan Pusher
+                    $data['message'] = 'Izin telah diperbarui oleh user ID ' . $user_id;
+                    $this->pusher->trigger('izin-channel', 'izin-updated', $data);
+
+                    return $this->respond([
+                        'status' => 'success',
+                        'message' => 'Data updated successfully'
+                    ], 200);
+                } else {
+                    return $this->respond([
+                        'status' => 'error',
+                        'message' => 'Data not found'
+                    ], 404);
+                }
+        }
+    }
+
+
+    function delete($id)
+    {
+
+        $delete = $this->model->delete($id);
+        if ($delete) {
+            return $this->respond([
+                'status' => 'success',
+                'message' => 'Data berhasil dihapus'
+            ], 200);
+        } else {
+            return $this->respond([
+                'message' => 'Ops, id tidak valid'
+            ], 400);
         }
     }
 }
