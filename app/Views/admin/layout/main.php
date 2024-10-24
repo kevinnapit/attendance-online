@@ -151,6 +151,86 @@
             }
         }
     </script>
+    <script>
+        // Enable Pusher logging - don't include this in production
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher('bd956035076f87400396', {
+            cluster: 'ap1'
+        });
+        var userRole = "<?php echo session()->get('admin_role'); ?>"; // PHP menambahkan role pengguna
+
+        var adminId = "<?php echo session()->get('admin_id'); ?>";
+
+        // Subscribe ke channel yang sesuai dengan admin_id
+        var izinChannel = pusher.subscribe('izin-channel' + adminId);
+
+        izinChannel.bind('izin-added', function(data) {
+            // Tambahkan notifikasi ke dalam dropdown hanya untuk admin yang sesuai
+            var notificationHtml = '<div class="notification-item">' +
+                '<a href="/admin2011/notifikasi/index" style="text-decoration: none; color: inherit;">' +
+                data.message +
+                '</a></div>';
+            document.getElementById('notification-container').insertAdjacentHTML('beforeend', notificationHtml);
+
+            // Perbarui angka notifikasi
+            var notificationCountElem = document.getElementById('notification-count');
+            var currentCount = parseInt(notificationCountElem.textContent) || 0;
+            notificationCountElem.textContent = currentCount + 1;
+
+            // Opsi tambahan: Tampilkan alert menggunakan SweetAlert
+            Swal.fire({
+                icon: 'warning',
+                title: 'Notifikasi Izin untuk Admin',
+                text: data.message,
+                showConfirmButton: true,
+                confirmButtonText: '<a href="/admin2011/cutiizin/index" style="color:white;">Lihat Permohonan</a>',
+                confirmButtonColor: '#3085d6',
+                showCloseButton: true
+            });
+        });
+        var izinUserChannel = pusher.subscribe('izin-channel-user-' + userId);
+
+
+        // untuk notifikasi ketika update
+
+        // Ambil ID user dan role dari session (misal disimpan dalam session atau meta tag di HTML)
+        var userId = "<?php echo session()->get('admin_id'); ?>";
+        var userRole = "<?php echo session()->get('admin_role'); ?>"; // 'superadmin' atau 'user'
+
+        if (userRole === 'superadmin') {
+            var adminChannel = pusher.subscribe('izin-channel-admin-' + userId);
+
+            adminChannel.bind('izin-added', function(data) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Notifikasi Izin Baru',
+                    text: data.message, // Pesan izin baru
+                    showConfirmButton: true,
+                    confirmButtonText: '<a href="/admin2011/cutiizin/index" style="color:white;">Lihat Permohonan</a>',
+                    confirmButtonColor: '#3085d6',
+                    showCloseButton: true
+                });
+            });
+        }
+
+        // Jika user adalah user biasa yang mengajukan izin, subscribe ke channel mereka sendiri
+        // Untuk User yang mengajukan izin
+        if (userRole === 'user') {
+            var userChannel = pusher.subscribe('izin-channel-user-' + userId);
+            userChannel.bind('izin-status-updated', function(data) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Status Izin',
+                    text: data.message, // Pesan status izin
+                    showConfirmButton: true,
+                    confirmButtonText: '<a href="/admin2011/cutiizin/index" style="color:white;">Lihat Status Izin</a>',
+                    confirmButtonColor: '#3085d6',
+                    showCloseButton: true
+                });
+            });
+        }
+    </script>
     <?= $this->renderSection('script') ?>
 </body>
 

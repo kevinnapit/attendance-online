@@ -20,10 +20,19 @@ class NotifikasiModel extends Model
     ];
     public function getUnreadNotificationsWithUser()
     {
-        return $this->select('notifications.*, admin.username')
-            ->join('admin', 'admin.id = notifications.id_user')
+        return $this->select('notifications.*, tb_admin.username')
+            ->join('tb_admin', 'tb_admin.id = notifications.user_id')
             ->where('notifications.is_read', 0)
             ->orderBy('notifications.created_at', 'DESC')
             ->findAll();
+    }
+    public function markNotificationsAsRead()
+    {
+        $notificationModel = new NotifikasiModel();
+
+        // Tandai semua notifikasi sebagai dibaca
+        $notificationModel->where('is_read', 0)->set('is_read', 1)->update();
+
+        return $this->response->setJSON(['status' => 'success']);
     }
 }

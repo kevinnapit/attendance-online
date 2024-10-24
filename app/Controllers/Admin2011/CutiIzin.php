@@ -7,6 +7,7 @@ use App\Models\PresensiModel;
 use App\Models\AdminModel;
 use App\Models\ModelSetting;
 use App\Models\LeavesModel;
+use App\Models\NotifikasiModel;
 use CodeIgniter\API\ResponseTrait;
 use Pusher\Pusher;
 use GuzzleHttp\Client;
@@ -14,10 +15,11 @@ use GuzzleHttp\Client;
 class CutiIzin extends BaseController
 {
     use ResponseTrait;
-    var $model, $pusher;
+    var $model, $pusher, $admin;
     function __construct()
     {
         $this->model = new LeavesModel();
+        $this->admin = new AdminModel();
         $options = array(
             'cluster' => 'ap1',
             'useTLS' => true,
@@ -161,6 +163,8 @@ class CutiIzin extends BaseController
         switch ($action) {
             case "add":
                 $user_id = session()->get('user_id');
+                $username = session()->get('admin_name');
+
                 $requestData = [
                     'user_id'    => $user_id,
                     'type'       => $this->request->getVar('type'),
@@ -171,9 +175,20 @@ class CutiIzin extends BaseController
 
                 $this->model->insert($requestData);
 
+                // Ambil admin yang berhak menerima notifikasi
+                $adminUsers = $this->admin->where('role', 'superadmin')->findAll(); // Cari admin
+
+                // Kirim notifikasi ke setiap admin
+                foreach ($adminUsers as $admin) {
+                    $data['message'] = 'Izin baru telah diajukan oleh' . $username;
+                    $this->pusher->trigger('izin-channel' . $admin['id'], 'izin-added', $data);
+                }
                 // Kirim notifikasi menggunakan Pusher
-                $data['message'] = 'Izin baru telah diajukan oleh user ID ' . $user_id;
-                $this->pusher->trigger('izin-channel', 'izin-added', $data);
+                // $data['message'] = 'Izin baru telah diajukan oleh ' . $user_id;
+                // $this->pusher->trigger('izin-channel', 'izin-added', $data);
+                $message = 'Pengajuan dari ' . $username . ' butuh aproval Anda';
+                $this->sendNotification($message, $user_id);
+
 
                 return $this->respond([
                     'status' => 'success',
@@ -182,21 +197,36 @@ class CutiIzin extends BaseController
 
             case "update":
                 $user_id = session()->get('user_id');
+                $username = session()->get('admin_name');
+                $status = $this->request->getVar('status');
                 $requestData = [
                     'user_id'    => $user_id,
                     'type'       => $this->request->getVar('type'),
                     'start_date' => $this->request->getVar('start_date'),
                     'end_date'   => $this->request->getVar('end_date'),
                     'reason'     => $this->request->getVar('reason'),
+                    'status'     => $status
                 ];
 
                 $detail = $this->model->find($this->request->getVar('id'));
                 if ($detail) {
                     $this->model->update($detail['id'], $requestData);
 
-                    // Kirim notifikasi menggunakan Pusher
-                    $data['message'] = 'Izin telah diperbarui oleh user ID ' . $user_id;
-                    $this->pusher->trigger('izin-channel', 'izin-updated', $data);
+                    // Ambil admin yang berhak menerima notifikasi
+                    $adminUsers = $this->admin->where('role', 'superadmin')->findAll(); // Cari admin
+
+                    // Kirim notifikasi ke setiap superadmin
+                    foreach ($adminUsers as $admin) {
+                        $data['message'] = 'Izin telah ' . $status . ' oleh ' . $username;
+                        $this->pusher->trigger('izin-channel-admin-' . $admin['id'], 'izin-added', $data);
+                    }
+
+                    // Kirim notifikasi ke user yang mengajukan izin
+                    $userData = $this->model->find($detail['user_id']); // Cari user yang mengajukan izin
+                    if ($userData) {
+                        $dataUser['message'] = 'Status permohonan izin Anda telah di' . strtolower($status) . ' oleh admin';
+                        $this->pusher->trigger('izin-channel-user-' . $detail['user_id'], 'izin-status-updated', $dataUser);
+                    }
 
                     return $this->respond([
                         'status' => 'success',
@@ -209,6 +239,25 @@ class CutiIzin extends BaseController
                     ], 404);
                 }
         }
+    }
+
+    public function sendNotification($message, $id_user)
+    {
+        $notificationModel = new NotifikasiModel();
+
+        // Simpan notifikasi ke database
+        $notificationModel->insert([
+            'message' => $message,
+            'user_id' => $id_user,
+            'is_read' => 0
+        ]);
+
+        // Kirim event Pusher
+        $data['message'] = $message;
+        $data['user_id'] = $id_user;
+
+        // Trigger Pusher event
+        $this->pusher->trigger('notification-channel', 'new-notification', $data);
     }
 
 

@@ -21,7 +21,7 @@
 
     <!-- navbar untuk notifikasi -->
     <li class="nav-item dropdown dropdown-on-hover">
-      <a class="nav-link notification-indicator notification-indicator-primary px-0 icon-indicator" id="navbarDropdownNotification" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <a class="nav-link notification-indicator notification-indicator-primary px-0 icon-indicator" id="navbarDropdownNotification" href="<?= base_url('admin2011/cutiizin/index') ?>" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <svg class="svg-inline--fa fa-bell fa-w-14 fs-4" data-fa-transform="shrink-6" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bell" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="" style="transform-origin: 0.4375em 0.5em;">
           <g transform="translate(224 256)">
             <g transform="translate(0, 0) scale(0.625, 0.625) rotate(0 0 0)">
@@ -32,7 +32,7 @@
         <span id="notification-count" class="notification-count"></span>
       </a>
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownNotification">
-        <div id="notification-container" class="notification-container">
+        <div id="notification-container" class="bg-white rounded-soft py-2">
           <!-- Notifications will be appended here -->
 
         </div>
@@ -61,31 +61,3 @@
     </li>
   </ul>
 </nav>
-<script>
-  $(document).ready(function() {
-    $.ajax({
-      url: '<?= site_url('admin2011/getNotifications') ?>',
-      method: 'GET',
-      success: function(data) {
-        var notifications = data; // Data berupa array notifikasi
-        var notificationContainer = $('#notification-container');
-        var notificationCount = $('#notification-count');
-
-        // Kosongkan kontainer notifikasi terlebih dahulu
-        notificationContainer.empty();
-
-        // Tambahkan setiap notifikasi ke dropdown
-        notifications.forEach(function(notification) {
-          notificationContainer.append(
-            '<div class="notification-item">' +
-            '<strong>' + notification.username + ':</strong> ' + notification.message +
-            '</div>'
-          );
-        });
-
-        // Update jumlah notifikasi
-        notificationCount.text(notifications.length);
-      }
-    });
-  });
-</script>

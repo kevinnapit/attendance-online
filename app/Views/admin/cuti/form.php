@@ -8,6 +8,7 @@
         <input type="hidden" name="id" value="<?php if (isset($detail['id'])) echo $detail['id']; ?>" />
         Type:<br />
         <select name="type" class="selectpicker form-control">
+            <option <?php if (isset($detail['type']) && $detail['type'] == '') { ?>selected<?php } ?>>Jenis Permohonan</option>
             <option <?php if (isset($detail['type']) && $detail['type'] == 'izin') { ?>selected<?php } ?> value="izin">Izin</option>
             <option <?php if (isset($detail['type']) && $detail['type'] == 'cuti') { ?>selected<?php } ?> value="cuti">Cuti</option>
         </select>
@@ -22,6 +23,15 @@
         Alasan:<br />
         <textarea name="reason" class="form form-control form-50" rows="4" cols="50"><?php if (isset($detail['reason'])) echo $detail['reason']; ?></textarea>
         <br />
+        <?php if (session()->get('admin_role') == 'superadmin') { ?>
+            <select name="status" class="selectpicker form-control">
+                <option>Pilih status</option>
+
+                <option <?php if (isset($detail['status']) && $detail['status'] == 'pending') { ?>selected<?php } ?> value="pending">Terima</option>
+                <option <?php if (isset($detail['status']) && $detail['status'] == 'approved') { ?>selected<?php } ?> value="approved">Terima</option>
+                <option <?php if (isset($detail['status']) && $detail['status'] == 'rejected') { ?>selected<?php } ?> value="rejected">Tolak</option>
+            </select>
+        <?php } ?>
         <span id="report"></span>
 
         <input type="submit" name="" value="<?= $tombol ?>" class="btn btn-primary mt-3" />
@@ -43,9 +53,6 @@
                 console.log($this.val()); // cek tanggal yang dipilih di console
             });
         });
-
-
-
     });
 
     utils.$document.ready(function() {
@@ -57,10 +64,10 @@
     });
     $(document).ready(function() {
         $('#add_submit').submit(function(e) {
-            e.preventDefault(); // Prevent the default form submission
+            e.preventDefault();
 
-            var form = $(this)[0]; // Get the raw HTML form element
-            var formData = new FormData(form); // Create a new FormData object
+            var form = $(this)[0];
+            var formData = new FormData(form);
 
             $.ajax({
                 type: 'POST',
@@ -79,7 +86,7 @@
                     showToast("success", response.message);
                 },
                 error: function(xhr, status, error) {
-                    var response = xhr.responseJSON;
+                    var response = xhr.responseJSON;d
                     showToastError('Error', response);
                 }
             });

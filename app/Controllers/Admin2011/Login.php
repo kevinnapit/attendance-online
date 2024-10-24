@@ -42,8 +42,12 @@ class Login extends BaseController
                 'user_id' => $dataAkun['id']
             ];
             session()->set($akun);
-
-            return redirect()->to('admin2011/dashboard');
+            // Cek role dan redirect
+            if ($dataAkun['role'] == 'superadmin') {
+                return redirect()->to('admin2011/dashboard');
+            } elseif ($dataAkun['role'] == 'user') {
+                return redirect()->to('admin2011/user');
+            }
         }
 
         $data = [];
@@ -104,7 +108,13 @@ class Login extends BaseController
                 'user_id' => $dataAkun['id']
             ];
             session()->set($akun);
-            return redirect()->to('admin2011/dashboard');
+             // Cek role dan redirect
+             if ($dataAkun['role'] == 'superadmin') {
+                return redirect()->to('admin2011/dashboard');
+            } elseif ($dataAkun['role'] == 'user') {
+                return redirect()->to('admin2011/user');
+            }
+            // return redirect()->to('admin2011/dashboard');
         }
 
         echo view("admin/auth/login", $data);

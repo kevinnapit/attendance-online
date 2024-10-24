@@ -49,7 +49,6 @@
 <?php $this->endsection() ?>
 <?php $this->section('script') ?>
 
-
 <script>
     function dataindex() {
         $('#table_index').DataTable({
@@ -85,7 +84,18 @@
                     data: 'reason'
                 },
                 {
-                    data: 'status'
+                    data: 'status',
+                    render: function(data, type, row) {
+                        let statusClass = '';
+                        if (data === 'pending') {
+                            statusClass = 'badge badge-warning';
+                        } else if (data === 'approved') {
+                            statusClass = 'badge badge-success';
+                        } else if (data === 'rejected') {
+                            statusClass = 'badge badge-danger';
+                        }
+                        return '<span class="' + statusClass + '">' + data + '</span>';
+                    }
                 },
                 {
                     data: 'navButton',
@@ -101,7 +111,7 @@
             //   'copy','csv','excel','pdf','print'
             // ],	
             'order': [
-                [2, 'desc']
+                [2, 'asc']
             ],
             'language': {
                 'emptyTable': 'Belum ada data'
@@ -142,7 +152,7 @@
     }
 
     function editdata(iddata) {
-        $.get("<?= site_url('admin2011/admin/edit') ?>/" + iddata, function(data, status) {
+        $.get("<?= site_url('admin2011/cutiizin/edit') ?>/" + iddata, function(data, status) {
             $("#editor_add").html(data);
             $('#add').modal('toggle');
         });
@@ -156,52 +166,5 @@
         });
     }
 </script>
-<script>
-    // Enable Pusher logging - don't include this in production
-    Pusher.logToConsole = true;
 
-    var pusher = new Pusher('bd956035076f87400396', {
-        cluster: 'ap1'
-    });
-
-    // Channel untuk User (User Notification)
-    var userChannel = pusher.subscribe('izin-channel');
-    userChannel.bind('izin-added', function(data) {
-        Swal.fire({
-            icon: 'success',
-            title: 'Notifikasi Izin',
-            text: data.message,
-            showConfirmButton: true
-        });
-    });
-
-    userChannel.bind('izin-updated', function(data) {
-        Swal.fire({
-            icon: 'info',
-            title: 'Notifikasi Izin',
-            text: data.message,
-            showConfirmButton: true
-        });
-    });
-
-    // Channel untuk Admin (Admin Notification)
-    var adminChannel = pusher.subscribe('admin-channel');
-    adminChannel.bind('izin-for-admin', function(data) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Notifikasi Izin untuk Admin',
-            text: data.message,
-            showConfirmButton: true
-        });
-    });
-
-    adminChannel.bind('izin-updated-for-admin', function(data) {
-        Swal.fire({
-            icon: 'info',
-            title: 'Notifikasi Pembaruan Izin untuk Admin',
-            text: data.message,
-            showConfirmButton: true
-        });
-    });
-</script>
 <?php $this->endsection() ?>
