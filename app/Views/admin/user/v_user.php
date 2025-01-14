@@ -22,6 +22,20 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,700&display=swap" />
     <link rel="stylesheet" href="<?= base_url() ?>/front/fontawesome-free/css/all.min.css" />
     <link rel="stylesheet" href="<?= base_url() ?>/front/css/style.css" />
+    <style>
+        .icon-small {
+            display: inline-block;
+            width: 40px;
+            /* Sesuaikan dengan ukuran ikon Anda */
+            height: 40px;
+            /* Sesuaikan dengan ukuran ikon Anda */
+           
+            /* Ganti dengan path ikon Anda */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    </style>
 </head>
 
 <body style="background-color: #e9ecef">
@@ -33,7 +47,7 @@
 
     <!-- App Capsule -->
     <div id="appCapsule">
-        <div class="section bg-primary" id="user-section">
+        <div class="section" style="background-color: #7E60BF" id="user-section">
             <div id="user-detail">
                 <div class="avatar">
                     <img src="<?= base_url() ?>/front/img/sample/avatar/avatar1.jpg" alt="avatar" class="imaged w64 rounded" />
@@ -51,8 +65,7 @@
                     <div class="list-menu">
                         <div class="item-menu text-center">
                             <div class="menu-icon">
-                                <a href="" class="green" style="font-size: 40px"><i class="fas fa-user"></i>
-                                </a>
+                                <a href="" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/user.png" /></a>
                             </div>
                             <div class="menu-name">
                                 <span class="text-center">Profil</span>
@@ -60,9 +73,7 @@
                         </div>
                         <div class="item-menu text-center">
                             <div class="menu-icon">
-                                <a href="" class="danger" style="font-size: 40px">
-                                    <i class="fas fa-calendar-alt"></i>
-                                </a>
+                            <a href="" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/leave.png" /></a>
                             </div>
                             <div class="menu-name">
                                 <span class="text-center">Cuti</span>
@@ -70,9 +81,7 @@
                         </div>
                         <div class="item-menu text-center">
                             <div class="menu-icon">
-                                <a href="" class="warning" style="font-size: 40px">
-                                    <i class="fas fa-file-alt"></i>
-                                </a>
+                            <a href="" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/clock.png" /></a>
                             </div>
                             <div class="menu-name">
                                 <span class="text-center">Histori</span>
@@ -80,9 +89,7 @@
                         </div>
                         <div class="item-menu text-center">
                             <div class="menu-icon">
-                                <a href="" class="orange" style="font-size: 40px">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </a>
+                            <a href="" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/placeholder.png" /></a>
                             </div>
                             <div class="menu-name">Lokasi</div>
                         </div>
@@ -94,10 +101,10 @@
             <div class="todaypresence">
                 <div class="row">
                     <div class="col-6">
-                        <div class="card bg-success">
+                        <div class="card" style="background-color: #7E60BF;">
                             <div class="card-body">
                                 <div class="presencecontent">
-                                    <div class="iconpresence">
+                                    <div class="iconpresence warning">
                                         <i class="fas fa-clock"></i>
                                     </div>
                                     <div class="presencedetail">
@@ -109,10 +116,10 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card bg-danger">
+                        <div class="card" style="background-color: #FF6500;">
                             <div class="card-body">
                                 <div class="presencecontent">
-                                    <div class="iconpresence">
+                                    <div class="iconpresence warning">
                                         <i class="fas fa-clock"></i>
                                     </div>
                                     <div class="presencedetail">
@@ -126,11 +133,11 @@
                 </div>
             </div>
 
-            <div class="rekappresence mt-1">
+            <!-- <div class="rekappresence mt-1">
                 <div class="col">
                     <canvas id="myChart" style="min-height: 460px; height: 460px; max-height: 460px; max-width: 100%;"></canvas>
                 </div>
-            </div>
+            </div> -->
 
             <div class="rekappresence mt-1">
 
@@ -319,7 +326,7 @@
                 <strong>Calendar</strong>
             </div>
         </a>
-        <a href="#" class="item">
+        <a href="<?=base_url('admin2011/absensi/index')?>" class="item">
             <div class="col">
                 <div class="action-button large">
                     <i class="fas fa-camera text-white fa-3x"></i>

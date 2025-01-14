@@ -36,7 +36,6 @@ class Notifikasi extends BaseController
     }
     public function index()
     {
-
         $data['notifications'] = $this->model->where('is_read', 0)->findAll();
         return view('admin/notifikasi/vnotif', $data);
     }

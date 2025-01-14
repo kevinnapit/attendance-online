@@ -17,6 +17,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.custom-icon {
+  display: inline-block;
+  width: 40px; /* Sesuaikan dengan ukuran ikon Anda */
+  height: 40px; /* Sesuaikan dengan ukuran ikon Anda */
+  background-image: url('front/icons/user.png'); /* Ganti dengan path ikon Anda */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
 ::-webkit-scrollbar {
   width: 0;
 }
@@ -427,7 +438,7 @@ button:focus {
   align-items: center;
   justify-content: center;
   border-radius: 200px;
-  background: #1e74fd;
+  background: #EC8305;
 }
 
 .appBottomMenu .item .action-button.large {
@@ -464,7 +475,7 @@ button:focus {
 .appBottomMenu .item.active i.icon,
 .appBottomMenu .item.active ion-icon,
 .appBottomMenu .item.active strong {
-  color: #1e74fd !important;
+  color: #EC8305 !important;
   font-weight: 500;
 }
 
@@ -613,7 +624,7 @@ button:focus {
   display: flex;
   align-items: center;
   position: relative;
-  background: #1e74fd;
+  background: #EC8305;
   box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.08);
   position: fixed;
   z-index: 100;
@@ -624,7 +635,7 @@ button:focus {
 }
 
 .profileBox:before {
-  background: #1e74fd;
+  background: #EC8305;
   content: "";
   height: env(safe-area-inset-top);
   display: block;
@@ -719,7 +730,7 @@ button:focus {
   align-items: flex-start;
   justify-content: space-between;
   padding: 0px 16px 10px 16px;
-  background: #1e74fd;
+  background: #EC8305;
 }
 
 .action-group .action-button {

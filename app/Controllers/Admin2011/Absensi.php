@@ -27,7 +27,7 @@ class Absensi extends BaseController
 
         $data['status'] = $this->absensi->where('tgl_presensi', $tgl_hari_ini)->where('username', $username)->countAllResults();
 
-        return view('admin/absensi/index', $data);
+        return view('admin/user/v_absensi');
     }
     public function submit()
     {
