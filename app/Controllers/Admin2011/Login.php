@@ -21,17 +21,27 @@ class Login extends BaseController
     }
     public function login()
     {
+        // Jika ada cookie yang tersimpan dan password tidak bernilai '1'
         if (get_cookie('admin_cookie_username') && get_cookie('admin_cookie_password') && (get_cookie('admin_cookie_password') != '1')) {
             $username = get_cookie('admin_cookie_username');
             $password = get_cookie('admin_cookie_password');
             $dataAkun = $this->model->getData($username);
+
+            // Verifikasi password jika tidak cocok
             if (!password_verify($password, $dataAkun['password'])) {
                 set_cookie("admin_cookie_failed", '1', 3600);
                 $err[] = "Ops! Terjadi kesalahan";
                 return redirect()->to('admin2011/login');
             }
 
-            // Set session data
+            // Cek apakah isLogin == 0 (belum diverifikasi)
+            if ($dataAkun['isLogin'] == 0) {
+                $err[] = "Admin belum verifikasi akun anda";
+                session()->setFlashdata('warning', $err);
+                return redirect()->to('admin2011/login');
+            }
+
+            // Set session data jika berhasil login
             $akun = [
                 'admin_username' => $username,
                 'username' => $dataAkun['username'],
@@ -42,7 +52,8 @@ class Login extends BaseController
                 'user_id' => $dataAkun['id']
             ];
             session()->set($akun);
-            // Cek role dan redirect
+
+            // Cek role dan redirect ke halaman sesuai role
             if ($dataAkun['role'] == 'superadmin') {
                 return redirect()->to('admin2011/dashboard');
             } elseif ($dataAkun['role'] == 'user') {
@@ -50,8 +61,10 @@ class Login extends BaseController
             }
         }
 
+        // Inisialisasi array untuk error
         $data = [];
 
+        // Jika metode request adalah POST
         if ($this->request->getMethod() == 'post') {
             $rules = [
                 'username' => [
@@ -68,16 +81,21 @@ class Login extends BaseController
                 ]
             ];
 
+            // Validasi form input
             if (!$this->validate($rules)) {
                 session()->setFlashdata("warning", $this->validation->getErrors());
                 return redirect()->to("admin2011/login");
             }
 
+            // Ambil data form
             $username = $this->request->getVar('username');
             $password = $this->request->getVar('password');
             $remember_me = $this->request->getVar('remember_me');
 
+            // Ambil data akun dari database berdasarkan username
             $dataAkun = $this->model->getData($username);
+
+            // Jika username tidak ditemukan
             if (!isset($dataAkun['username'])) {
                 $err[] = "Username tidak ditemukan.";
                 session()->setFlashdata('username', $username);
@@ -85,6 +103,7 @@ class Login extends BaseController
                 return redirect()->to("admin2011/login");
             }
 
+            // Verifikasi password
             if (!password_verify($password, $dataAkun['password'])) {
                 $err[] = "Password yang di masukkan salah.";
                 session()->setFlashdata('username', $username);
@@ -92,7 +111,14 @@ class Login extends BaseController
                 return redirect()->to("admin2011/login");
             }
 
-            // Set cookie if remember_me is checked
+            // Cek apakah akun sudah diverifikasi (isLogin = 0)
+            if ($dataAkun['isLogin'] == 0) {
+                $err[] = "Admin Belum Verifikasi Akun Anda";
+                session()->setFlashdata('warning', $err);
+                return redirect()->to("admin2011/login");
+            }
+
+            // Jika remember_me dicentang, simpan cookie
             if ($remember_me == '1') {
                 set_cookie("admin_cookie_username", $username, 3600 * 24 * 30);
                 set_cookie("admin_cookie_password", $password, 3600 * 24 * 30);
@@ -108,17 +134,19 @@ class Login extends BaseController
                 'user_id' => $dataAkun['id']
             ];
             session()->set($akun);
-             // Cek role dan redirect
-             if ($dataAkun['role'] == 'superadmin') {
+
+            // Cek role dan redirect ke halaman sesuai role
+            if ($dataAkun['role'] == 'superadmin') {
                 return redirect()->to('admin2011/dashboard');
             } elseif ($dataAkun['role'] == 'user') {
                 return redirect()->to('admin2011/user');
             }
-            // return redirect()->to('admin2011/dashboard');
         }
 
+        // Render tampilan login
         echo view("admin/auth/login", $data);
     }
+
 
 
     function logout()

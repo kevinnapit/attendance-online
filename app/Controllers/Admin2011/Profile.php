@@ -75,7 +75,7 @@ class Profile extends BaseController
                 ]
             ];
         }
-        
+
         if (!$this->validate($rules)) {
             // If validation fails, return the validation errors as JSON
             $errors = $this->validator->getErrors();
@@ -150,37 +150,36 @@ class Profile extends BaseController
                 ]
             ]
         ];
-        
+
         if (!$this->validate($rules)) {
             // If validation fails, return the validation errors as JSON
             $errors = $this->validator->getErrors();
             return $this->respond(['errors' => $errors], 400);
         }
-    
+
         $detail = $this->model->find(session()->get('admin_id'));
         // Validate and save the image file
         $image = $this->request->getFile('picture');
         if ($image->isValid() && in_array($image->getClientMimeType(), ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'])) {
             $newName = $image->getRandomName();
-            $image->move(ROOTPATH .'public/'. getenv('dir.upload.profile'), $newName);
-            
+            $image->move(ROOTPATH . 'public/' . getenv('dir.upload.profile'), $newName);
+
             // Delete the previous image file if it exists
             if (!empty($detail['picture'])) {
-                $imagePath = ROOTPATH .'public/'. getenv('dir.upload.profile') . $detail['picture'];
+                $imagePath = ROOTPATH . 'public/' . getenv('dir.upload.profile') . $detail['picture'];
                 if (file_exists($imagePath)) {
                     unlink($imagePath);
                 }
             }
-            
+
             // Update the picture in the database
             $this->model->update($detail['id'], ['picture' => $newName]);
         }
-        session()->set(['admin_picture'=> $newName]);
+        session()->set(['admin_picture' => $newName]);
         return $this->respond([
             'status' => 'success',
             'message' => 'Photo profile updated successfully',
-            'photo_url' => base_url().getenv('dir.upload.profile').$newName
+            'photo_url' => base_url() . getenv('dir.upload.profile') . $newName
         ], 200);
     }
-    
 }

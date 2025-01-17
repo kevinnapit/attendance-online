@@ -51,7 +51,7 @@
                     <div class="list-menu">
                         <div class="item-menu text-center">
                             <div class="menu-icon">
-                                <a href="" class="green" style="font-size: 40px"><i class="fas fa-user"></i>
+                                <a href="<?= site_url('admin2011/profil') ?>" class="green" style="font-size: 40px"><i class="fas fa-user"></i>
                                 </a>
                             </div>
                             <div class="menu-name">
@@ -75,7 +75,7 @@
                                 </a>
                             </div>
                             <div class="menu-name">
-                                <span class="text-center">Histori</span>
+                                <span class="text-center">Riwayat</span>
                             </div>
                         </div>
                         <div class="item-menu text-center">

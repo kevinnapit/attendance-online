@@ -72,7 +72,7 @@
             // posisi kantor
 
             var kantoricon = L.icon({
-                iconUrl: '<?= base_url('front/img/building.png') ?>',
+                iconUrl: '<?= base_url('front/img/sample/gedungg.png') ?>',
 
                 iconSize: [38, 95], // size of the icon
                 shadowSize: [50, 64], // size of the shadow

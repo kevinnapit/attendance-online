@@ -4,16 +4,20 @@ namespace App\Controllers\Admin2011;
 
 use App\Controllers\BaseController;
 use App\Models\AdminModel;
+use App\Models\PendidikanModel;
+use App\Models\TugasBelajarModel;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\RequestTrait;
 
 class Admin extends BaseController
 {
     use ResponseTrait;
-    var $model, $validation;
+    var $model, $pendidikan, $belajar, $validation;
     function __construct()
     {
         $this->model = new AdminModel();
+        $this->pendidikan = new PendidikanModel();
+        $this->belajar = new TugasBelajarModel();
         $this->validation = \Config\Services::validation();
         helper("cookie");
         helper("global_fungsi_helper");
@@ -23,6 +27,20 @@ class Admin extends BaseController
     {
         return view('admin/auth/admin_list');
     }
+    public function view($id)
+    {
+        // Memastikan ID adalah integer
+        $user = $this->model->find($id);
+        $pendidikan = $this->pendidikan->where('id_user', $id)->findAll();
+        $pendidikan = $this->pendidikan->where('id_user', $id)->findAll();
+        $belajar = $this->belajar->where('id_user', $id)->findAll();
+        return view('admin/auth/user_detail', [
+            'user' => $user,
+            'pendidikan' => $pendidikan,
+            'belajar' => $belajar
+        ]);
+    }
+
     public function loaddata()
     {
         $request = service('request');
@@ -39,36 +57,51 @@ class Admin extends BaseController
 
         $db = db_connect();
 
-        $totalRecords = $db->table('tb_admin')->countAll();
+        // Total Records with 'role = user' filter
+        $totalRecords = $db->table('tb_admin')
+            ->where('role', 'user') // Filter only 'role = user'
+            ->countAll();
 
+        // Total Records with 'role = user' filter and search filter applied
         $totalRecordsWithFilter = $db->table('tb_admin')
-            ->where('id !=', '0')
+            ->where('role', 'user') // Filter only 'role = user'
+            ->groupStart() // Start grouping conditions
             ->like('name', $searchValue)
             ->orLike('username', $searchValue)
             ->orLike('email', $searchValue)
+            ->groupEnd() // End grouping conditions
             ->countAllResults();
 
+        // Sorting and ordering
         $orderBy = ($columnName == '') ? 'id DESC' : $columnName . ' ' . $columnSortOrder;
+
+        // Fetch the data with filter, pagination, and sorting (only 'role = user')
         $data = $db->table('tb_admin')
             ->select('*')
-            ->where('id !=', '0')
+            ->where('role', 'user') // Filter only 'role = user'
+            ->groupStart() // Start grouping conditions for search
             ->like('name', $searchValue)
             ->orLike('username', $searchValue)
             ->orLike('email', $searchValue)
+            ->groupEnd() // End grouping conditions
             ->orderBy($orderBy)
             ->limit($rowperpage, $row)
             ->get()
             ->getResult();
 
+        // Prepare response in JSON format
         $response = [
             'draw' => intval($draw),
-            'iTotalRecords' => $totalRecordsWithFilter,
-            'iTotalDisplayRecords' => $totalRecords,
+            'iTotalRecords' => $totalRecordsWithFilter, // Total filtered records
+            'iTotalDisplayRecords' => $totalRecords, // Total records with 'role = user'
             'aaData' => $data
         ];
 
+        // Return the response as JSON
         return $this->response->setJSON($response);
     }
+
+
     function submitdata()
     {
         $action = $this->request->getVar('action');
@@ -137,9 +170,11 @@ class Admin extends BaseController
                     'name' => $this->request->getVar('name'),
                     'username' => $this->request->getVar('username'),
                     'email' => $this->request->getVar('email'),
-                    'role' => $this->request->getVar('role'),
-                    'password' => password_hash($this->request->getVar('password'), PASSWORD_BCRYPT)
+                    'role' => 'user',  // Set role menjadi 'user' secara otomatis
+                    'password' => password_hash($this->request->getVar('password'), PASSWORD_BCRYPT),
+                    'isLogin' => 1  // Set isLogin menjadi 1 secara otomatis
                 );
+
                 $image = $this->request->getFile('picture');
                 if ($image->isValid()) {
                     $newName = $image->getRandomName();
@@ -158,11 +193,14 @@ class Admin extends BaseController
                     'name' => $this->request->getVar('name'),
                     'username' => $this->request->getVar('username'),
                     'email' => $this->request->getVar('email'),
-                    'role' => $this->request->getVar('role'),
+                    'role' => $this->request->getVar('role') ?: 'user',  // Set default 'user' if 'role' is empty
+                    'isLogin' => 1  // Set default isLogin to 1
                 );
+
                 if ($this->request->getVar('password') != "") {
                     $requestData['password'] = password_hash($this->request->getVar('password'), PASSWORD_BCRYPT);
                 }
+
                 $detail = $this->model->find($this->request->getVar('id'));
                 $image = $this->request->getFile('picture');
                 if ($image->isValid()) {
@@ -187,16 +225,17 @@ class Admin extends BaseController
 
     function add()
     {
-        $data['title'] = "Tambah Admin";
+        $data['title'] = "Tambah User";
         $data['detail'] = [];
         $data['action'] = "add";
         $data['alert'] = "";
-        $data['tombol'] = "+ Tambah Admin";
+        $data['tombol'] = "+ Tambah User";
         echo view('admin/auth/admin_add', $data);
     }
+
     function edit($id)
     {
-        $data['title'] = "Edit Data Admin";
+        $data['title'] = "Edit Data User";
         $data['detail'] = $this->model->find($id);
         $data['action'] = "update";
         $data['alert'] = "Kosongkan password jika tidak ingin di ubah";
@@ -217,5 +256,21 @@ class Admin extends BaseController
                 'message' => 'Ops! Id tidak valid'
             ], 400);
         }
+    }
+
+    public function updateIsLogin()
+    {
+        $id = $this->request->getPost('id');
+        $isLogin = $this->request->getPost('isLogin');
+
+        // Update isLogin value in the database
+        $db = db_connect();
+        $builder = $db->table('tb_admin');
+        $builder->set('isLogin', $isLogin);
+        $builder->where('id', $id);
+        $builder->update();
+
+        // Return success response
+        return $this->response->setJSON(['message' => 'Status berhasil diperbarui']);
     }
 }
