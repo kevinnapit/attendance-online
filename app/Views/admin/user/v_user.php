@@ -29,7 +29,7 @@
             /* Sesuaikan dengan ukuran ikon Anda */
             height: 40px;
             /* Sesuaikan dengan ukuran ikon Anda */
-           
+
             /* Ganti dengan path ikon Anda */
             background-size: cover;
             background-position: center;
@@ -53,7 +53,7 @@
                     <img src="<?= base_url() ?>/front/img/sample/avatar/avatar1.jpg" alt="avatar" class="imaged w64 rounded" />
                 </div>
                 <div id="user-info">
-                    <h2 id="user-name">Admin Mobile</h2>
+                    <h2 id="user-name"><span><?php echo session()->get('admin_name') ?></span></h2>
                     <span id="user-role">Programmer</span>
                 </div>
             </div>
@@ -73,7 +73,7 @@
                         </div>
                         <div class="item-menu text-center">
                             <div class="menu-icon">
-                            <a href="" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/leave.png" /></a>
+                                <a href="" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/leave.png" /></a>
                             </div>
                             <div class="menu-name">
                                 <span class="text-center">Cuti</span>
@@ -81,7 +81,7 @@
                         </div>
                         <div class="item-menu text-center">
                             <div class="menu-icon">
-                            <a href="" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/clock.png" /></a>
+                                <a href="" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/clock.png" /></a>
                             </div>
                             <div class="menu-name">
                                 <span class="text-center">Histori</span>
@@ -89,49 +89,91 @@
                         </div>
                         <div class="item-menu text-center">
                             <div class="menu-icon">
-                            <a href="" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/placeholder.png" /></a>
+                                <a href="<?= base_url('admin2011/logout') ?>" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/power.png" /></a>
                             </div>
-                            <div class="menu-name">Lokasi</div>
+                            <div class="menu-name">Keluar</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="section mt-2" id="presence-section">
-            <div class="todaypresence">
-                <div class="row">
-                    <div class="col-6">
-                        <div class="card" style="background-color: #7E60BF;">
-                            <div class="card-body">
-                                <div class="presencecontent">
-                                    <div class="iconpresence warning">
-                                        <i class="fas fa-clock"></i>
-                                    </div>
-                                    <div class="presencedetail">
-                                        <h4 class="presencetitle">Masuk</h4>
-                                        <span>07:00</span>
+            <?php if (!empty($presensi)) : ?>
+                <div class="todaypresence">
+                    <div class="row">
+                        <!-- Kolom Masuk -->
+                        <div class="col-6">
+                            <div class="card" style="background-color: #7E60BF;">
+                                <div class="card-body">
+                                    <div class="presencecontent">
+                                        <div class="iconpresence warning">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="presencedetail">
+                                            <h4 class="presencetitle">Masuk</h4>
+                                            <span><?= esc($presensi['jam_in']) ?: 'Tidak Ada Data'; ?></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="card" style="background-color: #FF6500;">
-                            <div class="card-body">
-                                <div class="presencecontent">
-                                    <div class="iconpresence warning">
-                                        <i class="fas fa-clock"></i>
-                                    </div>
-                                    <div class="presencedetail">
-                                        <h4 class="presencetitle">Pulang</h4>
-                                        <span>12:00</span>
+                        <!-- Kolom Pulang -->
+                        <div class="col-6">
+                            <div class="card" style="background-color: #FF6500;">
+                                <div class="card-body">
+                                    <div class="presencecontent">
+                                        <div class="iconpresence warning">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="presencedetail">
+                                            <h4 class="presencetitle">Pulang</h4>
+                                            <span><?= esc($presensi['jam_out']) ?: 'Tidak Ada Data'; ?></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            <?php else : ?>
+                <div class="todaypresence">
+                    <div class="row">
+                        <!-- Kolom Masuk -->
+                        <div class="col-6">
+                            <div class="card" style="background-color: #7E60BF;">
+                                <div class="card-body">
+                                    <div class="presencecontent">
+                                        <div class="iconpresence warning">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="presencedetail">
+                                            <h4 class="presencetitle">Masuk</h4>
+                                            <span>00:00:00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Kolom Pulang -->
+                        <div class="col-6">
+                            <div class="card" style="background-color: #FF6500;">
+                                <div class="card-body">
+                                    <div class="presencecontent">
+                                        <div class="iconpresence warning">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="presencedetail">
+                                            <h4 class="presencetitle">Pulang</h4>
+                                            <span>00:00:00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
 
             <!-- <div class="rekappresence mt-1">
                 <div class="col">
@@ -151,7 +193,7 @@
                                     </div>
                                     <div class="presencedetail">
                                         <h4 class="rekappresencetitle">Hadir</h4>
-                                        <span class="rekappresencedetail">0 Hari</span>
+                                        <span class="rekappresencedetail"><?= $kehadiran ?> Hari</span>
                                     </div>
                                 </div>
                             </div>
@@ -198,7 +240,7 @@
                                     </div>
                                     <div class="presencedetail">
                                         <h4 class="rekappresencetitle">Terlambat</h4>
-                                        <span class="rekappresencedetail">0 Hari</span>
+                                        <span class="rekappresencedetail"><?= esc($keterlambatan) ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -320,13 +362,13 @@
                 <strong>Home</strong>
             </div>
         </a>
-        <a href="#" class="item active">
+        <a href="<?= base_url('admin2011/calendar/index') ?>" class="item active">
             <div class="col">
                 <i class="fas fa-calendar-alt fa-3x"></i>
                 <strong>Calendar</strong>
             </div>
         </a>
-        <a href="<?=base_url('admin2011/absensi/index')?>" class="item">
+        <a href="<?= base_url('admin2011/absensi/index') ?>" class="item">
             <div class="col">
                 <div class="action-button large">
                     <i class="fas fa-camera text-white fa-3x"></i>

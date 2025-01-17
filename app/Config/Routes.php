@@ -8,6 +8,12 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->setAutoRoute(true);
 $routes->add('/', 'Admin2011\Login::login');
+$routes->get('/blink/checkBlink', 'Blink::checkBlink');
+$routes->get('/attendance/success', 'AttendanceController::success');
+
+
+
+
 
 $routes->add('admin2011/logout', 'Admin2011\Login::logout');
 $routes->post('admin2011/absensi/submit', 'Admin2011\absensi::submit');

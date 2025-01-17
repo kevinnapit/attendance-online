@@ -6,16 +6,19 @@ use App\Controllers\BaseController;
 use App\Models\PresensiModel;
 use App\Models\AdminModel;
 use App\Models\ModelSetting;
+use Carbon\Carbon;
+
 
 class Absensi extends BaseController
 {
 
-    var $absensi, $setting, $model;
+    var $absensi, $setting, $model, $session;
     function __construct()
     {
         $this->absensi = new PresensiModel();
         $this->setting = new ModelSetting();
         $this->model = new AdminModel();
+        $this->session = \Config\Services::session();
     }
     public function index()
     {
@@ -27,7 +30,7 @@ class Absensi extends BaseController
 
         $data['status'] = $this->absensi->where('tgl_presensi', $tgl_hari_ini)->where('username', $username)->countAllResults();
 
-        return view('admin/user/v_absensi');
+        return view('admin/user/v_absensi', $data);
     }
     public function submit()
     {
@@ -36,8 +39,8 @@ class Absensi extends BaseController
         $jam = date("H:i:s");
         $lokasi = $this->request->getPost('lokasi');
         $kantor = $this->setting->datakantor();
-        $latitudekantor = 2.3274844787258653;
-        $longitudekantor = 99.05082584612623;
+        $latitudekantor = 2.326082;
+        $longitudekantor = 99.0640307;
         $lokasiuser = explode(",", $lokasi);
         $latitudeuser = $lokasiuser[0];
         $longitudeuser = $lokasiuser[1];
@@ -60,7 +63,7 @@ class Absensi extends BaseController
 
         $cek = $this->absensi->where('tgl_presensi', $tgl_presensi)->where('username', $username)->countAllResults();
 
-        if ($radius > 10) {
+        if ($radius > 50) {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Anda Berada Diluar Radius']);
         } else {
             if ($cek > 0) {
@@ -86,20 +89,24 @@ class Absensi extends BaseController
                 }
             } else {
                 // Process "absen masuk" (insert)
+                $created_at = date('Y-m-d H:i:s');
+                $id_user =  $this->session->get('admin_id');
                 $data = [
                     'username' => $username,
                     'tgl_presensi' => $tgl_presensi,
                     'lokasi_' => $lokasi,
                     'jam_in' => $jam,
                     'foto_in' => $fileName,
-                    'lokasi_in' => $lokasi
+                    'lokasi_in' => $lokasi,
+                    'id' => $id_user,
+                    'created_at' => $created_at
                 ];
 
                 $simpan = $this->absensi->insert($data);
 
                 if ($simpan) {
                     if (file_put_contents($file, $image_base64)) {
-                        return $this->response->setJSON(['status' => 'success', 'message' => 'Data dan file berhasil disimpan']);
+                        return $this->response->setJSON(['status' => 'success', 'message' => 'Berhasil Absensi Masuk']);
                     } else {
                         return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal menyimpan file']);
                     }

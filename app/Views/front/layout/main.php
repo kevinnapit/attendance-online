@@ -19,11 +19,16 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,700&display=swap" />
     <link rel="stylesheet" href="<?= base_url() ?>/front/fontawesome-free/css/all.min.css" />
     <link rel="stylesheet" href="<?= base_url() ?>/front/css/style.css" />
+    <!-- calendar -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.css" rel="stylesheet">
+
     <!-- Leaflet CSS for map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
     <!-- Leaflet.js for map -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="<?= base_url() ?>assets/lib/fullcalendar/main.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -37,6 +42,9 @@
 
 
 
+    <!-- calendar -->
+    <script src="<?= base_url() ?>assets/lib/fullcalendar/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.2.0/dist/fullcalendar.min.js"></script>
     <!-- Jquery -->
     <script src="<?= base_url() ?>/front/js/lib/jquery-3.4.1.min.js"></script>
     <!-- Bootstrap-->

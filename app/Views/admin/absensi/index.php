@@ -89,7 +89,6 @@
                 .openPopup();
 
         }
-
     });
     $('#btnAbsensi').click(function(e) {
         e.preventDefault();
