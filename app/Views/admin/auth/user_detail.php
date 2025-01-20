@@ -129,24 +129,300 @@
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
 
                         <div class="tab-content">
-                            <p class="lead">Nullam sed tempus mauris, vitae pretium nibh. Nam pretium diam id massa mollis pretium. Aenean lacus massa, tristique id mauris ac, sollicitudin auctor neque. Cras laoreet nunc nibh, ac tristique orci rutrum quis. Nam luctus, sapien ligula finibus turpis.</p>
+                            <h6 class="mt-4">Data Kenaikan Pangkat</h6>
+                            <span class="badge badge-primary" style="cursor: pointer;" onclick="addpangkat(<?= esc($user['id']) ?>)">
+                                <i class="fas fa-plus-square"></i> Tambah Baru
+                            </span>
+                            <!-- Menampilkan pendidikan yang terkait dengan pengguna -->
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Jenis KP</th>
+                                            <th>TMT</th>
+                                            <th>Golongan</th>
+                                            <th>Mkg (Thn)</th>
+                                            <th>Mkg (Bln)</th>
+                                            <th>Angka Kredit</th>
+                                            <th>Nomor NP BKN</th>
+                                            <th>Tanggal NP BKN</th>
+                                            <th>Nomor SK</th>
+                                            <th>Tanggal SK</th>
+                                            <th>Attachments</th>
+                                            <th>#</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($pangkat)) : ?>
+                                            <?php foreach ($pangkat as $pangkats) : ?>
+                                                <tr>
+                                                    <td><?= esc($pangkats['jenis_kp']); ?></td>
+                                                    <td><?= esc($pangkats['tmt']); ?></td>
+                                                    <td><?= esc($pangkats['golongan']); ?></td>
+                                                    <td><?= esc($pangkats['mkg_thn']); ?></td>
+                                                    <td><?= esc($pangkats['mkg_bln']); ?></td>
+                                                    <td><?= esc($pangkats['angka_kredit']); ?></td>
+                                                    <td><?= esc($pangkats['nomor_np_bkn']); ?></td>
+                                                    <td><?= esc($pangkats['tanggal_np_bkn']); ?></td>
+                                                    <td><?= esc($pangkats['nomor_sk']); ?></td>
+                                                    <td><?= esc($pangkats['tanggal_sk']); ?></td>
+                                                    <td>
+                                                        <!-- Jika ada lampiran, tampilkan sebagai link -->
+                                                        <?php if (!empty($pangkats['attachments'])) : ?>
+                                                            <a href="<?= base_url('uploads/filepangkat/' . esc($pangkats['attachments'])); ?>" target="_blank">
+                                                                <button class="btn btn-info btn-sm mr-1"><i class="fas fa-eye"></i> Lampiran</button>
+                                                            </a>
+                                                        <?php else : ?>
+                                                            <span>Tidak ada lampiran</span>
+                                                        <?php endif; ?>
+
+
+                                                    </td>
+                                                    <td id="row-<?= $pangkats['id']; ?>">
+                                                        <!-- Tombol Edit -->
+                                                        <button class="btn btn-sm btn-warning" onclick="editpangkat(<?= $pangkats['id']; ?>)">
+                                                            <i class="fas fa-pen-square"></i>
+                                                        </button>
+                                                        <!-- Tombol Hapus tanpa konfirmasi -->
+                                                        <button class="btn btn-sm btn-danger" onclick="deletepangkat(<?= $pangkats['id']; ?>)">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else : ?>
+                                            <tr>
+                                                <td colspan="12" class="text-center">Tidak ada data pangkat.</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+
+                            </div>
                         </div>
                         <div class="tab-content">
-                            <p class="lead">Vestibulum convallis diam id nibh tempus, ac scelerisque nulla congue. Cras laoreet nunc nibh, ac tristique orci rutrum quis. Sed eu tellus pharetra, scelerisque nulla in, vehicula libero. Curabitur interdum nec metus ante sed luctus.</p>
+                            <h6 class="mt-4">Data Mutasi</h6>
+                            <span class="badge badge-primary" style="cursor: pointer;" onclick="addmutasi(<?= esc($user['id']) ?>)">
+                                <i class="fas fa-plus-square"></i> Tambah Baru
+                            </span>
+                            <!-- Menampilkan pendidikan yang terkait dengan pengguna -->
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>TMT</th>
+                                            <th>Nomor SK</th>
+                                            <th>Tanggal SK</th>
+                                            <th>Jabatan</th>
+                                            <th>Eselon</th>
+                                            <th>Unit Kerja</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($mutasi)) : ?>
+                                            <?php foreach ($mutasi as $item) : ?>
+                                                <tr>
+                                                    <td><?= esc($item['tmt']); ?></td>
+                                                    <td><?= esc($item['nomor_sk']); ?></td>
+                                                    <td><?= esc($item['tanggal_sk']); ?></td>
+                                                    <td><?= esc($item['jabatan']); ?></td>
+                                                    <td><?= esc($item['eselon']); ?></td>
+                                                    <td><?= esc($item['unit_kerja']); ?></td>
+                                                    <td>
+                                                        <!-- Tombol Edit -->
+                                                        <button class="btn btn-sm btn-warning" onclick="editmutasi(<?= $item['id']; ?>)">
+                                                            <i class="fas fa-pen-square"></i>
+                                                        </button>
+                                                        <!-- Tombol Hapus -->
+                                                        <button class="btn btn-sm btn-danger" onclick="deletemutasi(<?= $item['id']; ?>)">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else : ?>
+                                            <tr>
+                                                <td colspan="8" class="text-center">Tidak ada data mutasi.</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+
+                            </div>
                         </div>
                         <div class="tab-content">
-                            <p class="lead">Vestibulum convallis diam id nibh tempus, ac scelerisque nulla congue. Cras laoreet nunc nibh, ac tristique orci rutrum quis. Sed eu tellus pharetra, scelerisque nulla in, vehicula libero. Curabitur interdum nec metus ante sed luctus.</p>
+                            <h6 class="mt-4">Data Utama</h6>
+                            <span class="badge badge-primary" style="cursor: pointer;" onclick="adddisiplin(<?= esc($user['id']) ?>)">
+                                <i class="fas fa-plus-square"></i> Tambah Baru
+                            </span>
+                            <!-- Menampilkan pendidikan yang terkait dengan pengguna -->
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Jenis Hukuman</th>
+                                            <th>Tanggal Mulai</th>
+                                            <th>Tanggal Selesai</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($disiplin)) : ?>
+                                            <?php foreach ($disiplin as $data) : ?>
+                                                <tr>
+                                                    <td><?= esc($data['jenis_hukuman']); ?></td>
+                                                    <td><?= esc($data['tanggal_mulai']); ?></td>
+                                                    <td><?= esc($data['tanggal_selesai']); ?></td>
+                                                    <td>
+                                                        <!-- Tombol Edit -->
+                                                        <button class="btn btn-sm btn-warning" onclick="editdisiplin(<?= $data['id']; ?>)">
+                                                            <i class="fas fa-pen-square"></i>
+                                                        </button>
+                                                        <!-- Tombol Hapus -->
+                                                        <button class="btn btn-sm btn-danger" onclick="deletedisiplin(<?= $data['id']; ?>)">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else : ?>
+                                            <tr>
+                                                <td colspan="4" class="text-center">Tidak ada data hukuman.</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+
+
+                            </div>
                         </div>
                         <div class="tab-content">
-                            <p class="lead">Vestibulum convallis diam id nibh tempus, ac scelerisque nulla congue. Cras laoreet nunc nibh, ac tristique orci rutrum quis. Sed eu tellus pharetra, scelerisque nulla in, vehicula libero. Curabitur interdum nec metus ante sed luctus.</p>
+                            <h6 class="mt-4">Data Keluarga</h6>
+                            <span class="badge badge-primary" style="cursor: pointer;" onclick="addpendidikan(<?= esc($user['id']) ?>)">
+                                <i class="fas fa-plus-square"></i> Tambah Baru
+                            </span>
+                            <!-- Menampilkan pendidikan yang terkait dengan pengguna -->
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($keluarga)) : ?>
+                                            <?php foreach ($keluarga as $item) : ?>
+
+                                            <?php endforeach; ?>
+                                        <?php else : ?>
+                                            <tr>
+                                                <td colspan="5" class="text-center">Tidak ada data keluarga.</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <h6 class="mt-4">Data Anak</h6>
+                            <span class="badge badge-primary" style="cursor: pointer;" onclick="addpeningkatan(<?= esc($user['id']) ?>)">
+                                <i class="fas fa-plus-square"></i> Tambah Baru
+                            </span>
+                            <!-- Menampilkan pendidikan yang terkait dengan pengguna -->
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($belajar)) : ?>
+                                            <?php foreach ($belajar as $data) : ?>
+                                                <tr>
+
+
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else : ?>
+                                            <tr>
+                                                <td colspan="5" class="text-center">Tidak ada data Anak.</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="tab-content">
-                            <p class="lead">Vestibulum convallis diam id nibh tempus, ac scelerisque nulla congue. Cras laoreet nunc nibh, ac tristique orci rutrum quis. Sed eu tellus pharetra, scelerisque nulla in, vehicula libero. Curabitur interdum nec metus ante sed luctus.</p>
+                            <span class="badge badge-primary" style="cursor: pointer;" onclick="addfolder(<?= esc($user['id']) ?>)">
+                                <i class="fas fa-plus-square"></i> Buat Folder
+                            </span>
+
+                            <span class="badge badge-danger" style="cursor: pointer;" onclick="addfile(<?= esc($user['id']) ?>)">
+                                <i class="fas fa-upload"></i> Tambah File
+                            </span>
+
+
+                            <div class="row mt-3">
+                                <?php if (!empty($folder)) : ?>
+                                    <?php foreach ($folder as $data) : ?>
+                                        <div class="col-md-2 col-sm-3 mb-4">
+                                            <!-- Folder Grid -->
+                                            <div class="text-center">
+                                                <!-- Folder Icon (Gambar Folder) -->
+                                                <?php
+                                                // Cek apakah folder memiliki attachment
+                                                $folderImage = $data['attachment'] ? 'uploads/folder/' . $data['attachment'] : 'uploads/folder/folder.png';
+                                                ?>
+                                                <a href="<?= site_url('admin2011/arsip/detail/' . $data['id']) ?>" class="folder-link">
+                                                    <img src="<?= base_url($folderImage) ?>" alt="Folder Icon" class="img-fluid" style="width: 60px; height: 60px;">
+                                                </a>
+
+                                                <!-- Kategori Folder dan Tombol Hapus -->
+                                                <div class="d-flex justify-content-center align-items-center mt-2">
+                                                    <!-- Kategori Folder -->
+                                                    <h5 class="mr-2" style="font-size: 12px;"><?= esc($data['kategori']); ?></h5>
+                                                    <!-- Tombol Hapus (Ikon Tong Sampah) -->
+                                                    <button class="btn btn-link p-0" onclick="deletefolder(<?= $data['id']; ?>)">
+                                                        <i class="fas fa-trash-alt" style="font-size: 12px;"></i>
+                                                    </button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else : ?>
+                                    <div class="col-12">
+                                        <p class="text-center"></p>
+                                    </div>
+                                <?php endif; ?>
+                                <?php if (!empty($file)) : ?>
+                                    <?php foreach ($file as $data) : ?>
+                                        <div class="col-md-2 col-sm-3 mb-4">
+                                            <div class="text-center">
+                                                <!-- Gambar dan nama file -->
+                                                <a href="<?= base_url() ?>uploads/file/<?= esc($data['attachments']); ?>" target="_blank">
+                                                    <img class="mr-2" src="<?= base_url() ?>uploads/file/file.png" alt="File Icon" height="60" />
+                                                </a>
+
+                                                <!-- Tombol Hapus -->
+                                                <small class="mt-2"><?= esc($data['attachments']); ?></small><!-- Menampilkan nama file -->
+                                                <button class="btn btn-link p-0" onclick="deletefile(<?= $data['id']; ?>)">
+                                                    <i class="fas fa-trash-alt" style="font-size: 12px;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else : ?>
+                                    <div class="col-12">
+                                        <p class="text-center"></p>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -184,6 +460,71 @@
         });
     }
 
+    function addpangkat(id) {
+        // Load the modal content
+        $('#editor_add').load('<?= site_url('admin2011/pangkat/add/') ?>' + id, function() {
+            // After loading, show the modal
+            $('#add').modal({
+                show: true
+            });
+
+            // Set the user ID to the hidden input field inside the modal
+            $('#id_user').val(id);
+        });
+    }
+
+    function addmutasi(id) {
+        // Load the modal content
+        $('#editor_add').load('<?= site_url('admin2011/mutasi/add/') ?>' + id, function() {
+            // After loading, show the modal
+            $('#add').modal({
+                show: true
+            });
+
+            // Set the user ID to the hidden input field inside the modal
+            $('#id_user').val(id);
+        });
+    }
+
+    function adddisiplin(id) {
+        // Load the modal content
+        $('#editor_add').load('<?= site_url('admin2011/disiplin/add/') ?>' + id, function() {
+            // After loading, show the modal
+            $('#add').modal({
+                show: true
+            });
+
+            // Set the user ID to the hidden input field inside the modal
+            $('#id_user').val(id);
+        });
+    }
+
+    function addfolder(id) {
+        // Load the modal content
+        $('#editor_add').load('<?= site_url('admin2011/arsip/add_folder/') ?>' + id, function() {
+            // After loading, show the modal
+            $('#add').modal({
+                show: true
+            });
+
+            // Set the user ID to the hidden input field inside the modal
+            $('#id_user').val(id);
+        });
+    }
+
+    function addfile(id) {
+        // Load the modal content
+        $('#editor_add').load('<?= site_url('admin2011/arsip/add_file/') ?>' + id, function() {
+            // After loading, show the modal
+            $('#add').modal({
+                show: true
+            });
+
+            // Set the user ID to the hidden input field inside the modal
+            $('#id_user').val(id);
+        });
+    }
+
     function editdata(iddata) {
         $.get("<?= site_url('admin2011/pendidikan/editpendidikan') ?>/" + iddata, function(data, status) {
             $("#editor_add").html(data);
@@ -193,6 +534,27 @@
 
     function editpeningkatan(iddata) {
         $.get("<?= site_url('admin2011/pendidikan/editpeningkatan') ?>/" + iddata, function(data, status) {
+            $("#editor_add").html(data);
+            $('#add').modal('toggle');
+        });
+    }
+
+    function editpangkat(iddata) {
+        $.get("<?= site_url('admin2011/pangkat/edit') ?>/" + iddata, function(data, status) {
+            $("#editor_add").html(data);
+            $('#add').modal('toggle');
+        });
+    }
+
+    function editmutasi(iddata) {
+        $.get("<?= site_url('admin2011/mutasi/edit') ?>/" + iddata, function(data, status) {
+            $("#editor_add").html(data);
+            $('#add').modal('toggle');
+        });
+    }
+
+    function editdisiplin(iddata) {
+        $.get("<?= site_url('admin2011/disiplin/edit') ?>/" + iddata, function(data, status) {
             $("#editor_add").html(data);
             $('#add').modal('toggle');
         });
@@ -234,6 +596,141 @@
             $.ajax({
                 type: 'DELETE',
                 url: "<?= site_url('admin2011/pendidikan/deletepeningkatan') ?>/" + iddata,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    $('#alert_modal').modal('hide'); // Menutup modal
+                    // Menampilkan pesan sukses
+                    showToast('success', response.message);
+                    // Me-refresh halaman setelah penghapusan data
+                    location.reload(); // Menyegarkan halaman
+                },
+                error: function(xhr, status, error) {
+                    // Tanggapan error
+                    showToastError(error, xhr.responseJSON);
+                }
+            });
+        });
+    }
+
+    function deletepangkat(iddata) {
+        // Menampilkan modal konfirmasi
+        $('#alert_modal').modal('show');
+
+        // Jika tombol "Yes" diklik
+        $("#click_yes").off("click").on("click", function() {
+            $.ajax({
+                type: 'DELETE',
+                url: "<?= site_url('admin2011/pangkat/delete') ?>/" + iddata,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    $('#alert_modal').modal('hide'); // Menutup modal
+                    // Menampilkan pesan sukses
+                    showToast('success', response.message);
+                    // Me-refresh halaman setelah penghapusan data
+                    location.reload(); // Menyegarkan halaman
+                },
+                error: function(xhr, status, error) {
+                    // Tanggapan error
+                    showToastError(error, xhr.responseJSON);
+                }
+            });
+        });
+    }
+
+    function deletemutasi(iddata) {
+        // Menampilkan modal konfirmasi
+        $('#alert_modal').modal('show');
+
+        // Jika tombol "Yes" diklik
+        $("#click_yes").off("click").on("click", function() {
+            $.ajax({
+                type: 'DELETE',
+                url: "<?= site_url('admin2011/mutasi/delete') ?>/" + iddata,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    $('#alert_modal').modal('hide'); // Menutup modal
+                    // Menampilkan pesan sukses
+                    showToast('success', response.message);
+                    // Me-refresh halaman setelah penghapusan data
+                    location.reload(); // Menyegarkan halaman
+                },
+                error: function(xhr, status, error) {
+                    // Tanggapan error
+                    showToastError(error, xhr.responseJSON);
+                }
+            });
+        });
+    }
+
+    function deletedisiplin(iddata) {
+        // Menampilkan modal konfirmasi
+        $('#alert_modal').modal('show');
+
+        // Jika tombol "Yes" diklik
+        $("#click_yes").off("click").on("click", function() {
+            $.ajax({
+                type: 'DELETE',
+                url: "<?= site_url('admin2011/disiplin/delete') ?>/" + iddata,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    $('#alert_modal').modal('hide'); // Menutup modal
+                    // Menampilkan pesan sukses
+                    showToast('success', response.message);
+                    // Me-refresh halaman setelah penghapusan data
+                    location.reload(); // Menyegarkan halaman
+                },
+                error: function(xhr, status, error) {
+                    // Tanggapan error
+                    showToastError(error, xhr.responseJSON);
+                }
+            });
+        });
+    }
+
+    function deletefolder(iddata) {
+        // Menampilkan modal konfirmasi
+        $('#alert_modal').modal('show');
+
+        // Jika tombol "Yes" diklik
+        $("#click_yes").off("click").on("click", function() {
+            $.ajax({
+                type: 'DELETE',
+                url: "<?= site_url('admin2011/arsip/deletefolder') ?>/" + iddata,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    $('#alert_modal').modal('hide'); // Menutup modal
+                    // Menampilkan pesan sukses
+                    showToast('success', response.message);
+                    // Me-refresh halaman setelah penghapusan data
+                    location.reload(); // Menyegarkan halaman
+                },
+                error: function(xhr, status, error) {
+                    // Tanggapan error
+                    showToastError(error, xhr.responseJSON);
+                }
+            });
+        });
+    }
+
+    function deletefile(iddata) {
+        // Menampilkan modal konfirmasi
+        $('#alert_modal').modal('show');
+
+        // Jika tombol "Yes" diklik
+        $("#click_yes").off("click").on("click", function() {
+            $.ajax({
+                type: 'DELETE',
+                url: "<?= site_url('admin2011/arsip/deletefile') ?>/" + iddata,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },

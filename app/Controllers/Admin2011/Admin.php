@@ -6,18 +6,28 @@ use App\Controllers\BaseController;
 use App\Models\AdminModel;
 use App\Models\PendidikanModel;
 use App\Models\TugasBelajarModel;
+use App\Models\PangkatModel;
+use App\Models\MutasiModel;
+use App\Models\DisiplinModel;
+use App\Models\FolderModel;
+use App\Models\FileModel;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\RequestTrait;
 
 class Admin extends BaseController
 {
     use ResponseTrait;
-    var $model, $pendidikan, $belajar, $validation;
+    var $model, $pendidikan, $belajar, $pangkat, $mutasi, $disiplin, $folder, $file, $validation;
     function __construct()
     {
         $this->model = new AdminModel();
         $this->pendidikan = new PendidikanModel();
         $this->belajar = new TugasBelajarModel();
+        $this->pangkat = new PangkatModel();
+        $this->mutasi = new MutasiModel();
+        $this->disiplin = new DisiplinModel();
+        $this->folder = new FolderModel();
+        $this->file = new FileModel();
         $this->validation = \Config\Services::validation();
         helper("cookie");
         helper("global_fungsi_helper");
@@ -34,10 +44,20 @@ class Admin extends BaseController
         $pendidikan = $this->pendidikan->where('id_user', $id)->findAll();
         $pendidikan = $this->pendidikan->where('id_user', $id)->findAll();
         $belajar = $this->belajar->where('id_user', $id)->findAll();
+        $pangkat = $this->pangkat->where('id_user', $id)->findAll();
+        $mutasi = $this->mutasi->where('id_user', $id)->findAll();
+        $disiplin = $this->disiplin->where('id_user', $id)->findAll();
+        $folder = $this->folder->where('id_user', $id)->findAll();
+        $file = $this->file->getFilesByCategoryZero($id);
         return view('admin/auth/user_detail', [
             'user' => $user,
             'pendidikan' => $pendidikan,
-            'belajar' => $belajar
+            'belajar' => $belajar,
+            'pangkat' => $pangkat,
+            'mutasi' => $mutasi,
+            'disiplin' => $disiplin,
+            'folder' => $folder,
+            'file' => $file,
         ]);
     }
 

@@ -6,18 +6,20 @@ use App\Controllers\BaseController;
 use App\Models\AdminModel;
 use App\Models\PendidikanModel;
 use App\Models\TugasBelajarModel;
+use App\Models\PangkatModel;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\RequestTrait;
 
 class Pendidikan extends BaseController
 {
     use ResponseTrait;
-    var $model, $pendidikan, $belajar, $validation;
+    var $model, $pendidikan, $belajar, $pangkat, $validation;
     function __construct()
     {
         $this->model = new AdminModel();
         $this->pendidikan = new PendidikanModel();
         $this->belajar = new TugasBelajarModel();
+        $this->pangkat = new PangkatModel();
         $this->validation = \Config\Services::validation();
         helper("cookie");
         helper("global_fungsi_helper");
@@ -202,4 +204,8 @@ class Pendidikan extends BaseController
             ], 400);
         }
     }
+
+    // batas peningkatan
+
+   
 }
