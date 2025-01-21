@@ -4,6 +4,8 @@ namespace Config;
 
 use App\Filters\AdminFilter;
 use App\Filters\NoAdminFilter;
+use App\Filters\UserFilter;
+use App\Filters\NoUserFilter;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
@@ -32,7 +34,8 @@ class Filters extends BaseConfig
         'secureheaders' => SecureHeaders::class,
         'admin' => AdminFilter::class,
         'noadmin' => NoAdminFilter::class,
-        'homeAccess' => \App\Filters\HomeAccess::class,
+        'user'=> UserFilter::class,
+        'nouser' => NoUserFilter::class
     ];
 
     /**
@@ -77,6 +80,6 @@ class Filters extends BaseConfig
     public array $filters = [
         
         'admin' => ['before' => ['admin2011/*']],
-        'user' => ['before' => ['front/*']]
+        'user' => ['before' => ['user/*']]
     ];
 }

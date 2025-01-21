@@ -26,11 +26,9 @@
 </head>
 
 <body>
-
-
     <!-- App Bottom Menu -->
     <div class="appBottomMenu">
-        <a href="<?= base_url('admin2011/user') ?>" class="item">
+        <a href="<?= base_url('user/dashboard') ?>" class="item">
             <div class="col">
                 <i class="fas fa-home fa-3x"></i>
                 <strong>Home</strong>
@@ -42,7 +40,7 @@
                 <strong>Calendar</strong>
             </div>
         </a>
-        <a href="<?= base_url('admin2011/absensi') ?>" class="item">
+        <a href="<?= base_url('user/absensi') ?>" class="item">
             <div class="col">
                 <div class="action-button large label-dark">
                     <i class="fas fa-camera text-dark fa-3x"></i>

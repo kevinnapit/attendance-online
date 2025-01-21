@@ -1,26 +1,29 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\User;
 
 use App\Controllers\BaseController;
-use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\PresensiModel;
-use App\Models\AdminModel;
 use App\Models\ModelSetting;
+use App\Models\UserModel;
+use Carbon\Carbon;
 
-class Presensi extends BaseController
+
+class Absensi extends BaseController
 {
-    protected $absensi, $setting, $model;
+
+    var $absensi, $setting, $model, $session;
     function __construct()
     {
         $this->absensi = new PresensiModel();
         $this->setting = new ModelSetting();
-        $this->model = new AdminModel();
+        $this->model = new UserModel();
+        $this->session = \Config\Services::session();
     }
     public function index()
     {
         $tgl_hari_ini = date("Y-m-d");
-        $username = session()->get('admin_username');
+        $username = session()->get('user_username');
         $data['title'] = "Edit Data Admin";
         $data['detail'] = [];
         $data['lokasi'] = $this->setting->datakantor();
@@ -31,13 +34,13 @@ class Presensi extends BaseController
     }
     public function submit()
     {
-        $username = session()->get('admin_username');
+        $username = session()->get('user_username');
         $tgl_presensi = date("Y-m-d");
         $jam = date("H:i:s");
         $lokasi = $this->request->getPost('lokasi');
         $kantor = $this->setting->datakantor();
-        $latitudekantor = 2.3274844787258653;
-        $longitudekantor = 99.05082584612623;
+        $latitudekantor = 2.326082;
+        $longitudekantor = 99.0640307;
         $lokasiuser = explode(",", $lokasi);
         $latitudeuser = $lokasiuser[0];
         $longitudeuser = $lokasiuser[1];
@@ -60,7 +63,7 @@ class Presensi extends BaseController
 
         $cek = $this->absensi->where('tgl_presensi', $tgl_presensi)->where('username', $username)->countAllResults();
 
-        if ($radius > 10) {
+        if ($radius > 50) {
             return $this->response->setJSON(['status' => 'error', 'message' => 'Anda Berada Diluar Radius']);
         } else {
             if ($cek > 0) {
@@ -86,20 +89,24 @@ class Presensi extends BaseController
                 }
             } else {
                 // Process "absen masuk" (insert)
+                $created_at = date('Y-m-d H:i:s');
+                $id_user =  $this->session->get('user_id');
                 $data = [
                     'username' => $username,
                     'tgl_presensi' => $tgl_presensi,
                     'lokasi_' => $lokasi,
                     'jam_in' => $jam,
                     'foto_in' => $fileName,
-                    'lokasi_in' => $lokasi
+                    'lokasi_in' => $lokasi,
+                    'id' => $id_user,
+                    'created_at' => $created_at
                 ];
 
                 $simpan = $this->absensi->insert($data);
 
                 if ($simpan) {
                     if (file_put_contents($file, $image_base64)) {
-                        return $this->response->setJSON(['status' => 'success', 'message' => 'Data dan file berhasil disimpan']);
+                        return $this->response->setJSON(['status' => 'success', 'message' => 'Berhasil Absensi Masuk']);
                     } else {
                         return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal menyimpan file']);
                     }
@@ -109,9 +116,6 @@ class Presensi extends BaseController
             }
         }
     }
-
-
-
     function distance($lat1, $lon1, $lat2, $lon2)
     {
         $theta = $lon1 - $lon2;

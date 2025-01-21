@@ -29,18 +29,173 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="<?= base_url() ?>assets/lib/fullcalendar/main.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
+    <style>
+        video {
+            clear: both;
+            display: block;
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+            -moz-transform: rotateY(180deg);
+        }
+
+        section {
+            opacity: 1;
+            transition: opacity 500ms ease-in-out;
+        }
+
+        header,
+        footer {
+            clear: both;
+        }
+
+        .removed {
+            display: none;
+        }
+
+        .invisible {
+            opacity: 0.2;
+        }
+
+        .note {
+            font-style: italic;
+            font-size: 130%;
+        }
+
+        .videoView,
+        .detectOnClick,
+        .blend-shapes {
+            position: relative;
+            float: left;
+            width: 48%;
+            margin: 2% 1%;
+            cursor: pointer;
+        }
+
+        .videoView p,
+        .detectOnClick p {
+            position: absolute;
+            padding: 5px;
+            background-color: #007f8b;
+            color: #fff;
+            border: 1px dashed rgba(255, 255, 255, 0.7);
+            z-index: 2;
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .highlighter {
+            background: rgba(0, 255, 0, 0.25);
+            border: 1px dashed #fff;
+            z-index: 1;
+            position: absolute;
+        }
+
+        .canvas {
+            z-index: 1;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .output_canvas {
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+            -moz-transform: rotateY(180deg);
+        }
+
+        .detectOnClick {
+            z-index: 0;
+        }
+
+        .detectOnClick img {
+            width: 100%;
+        }
+
+        .blend-shapes-item {
+            display: flex;
+            align-items: center;
+            height: 20px;
+        }
+
+        .blend-shapes-label {
+            display: flex;
+            width: 120px;
+            justify-content: flex-end;
+            align-items: center;
+            margin-right: 4px;
+        }
+
+        .blend-shapes-value {
+            display: flex;
+            height: 16px;
+            align-items: center;
+            background-color: #007f8b;
+        }
+    </style>
+
+    <style>
+        /* Tambahkan style untuk memberikan jarak */
+        .main {
+            margin-top: 16px;
+            /* Jarak dari atas */
+            padding-top: 8px;
+            /* Tambahan padding */
+            background-color: #f8f9fa;
+            /* Warna latar untuk visualisasi */
+            min-height: 100vh;
+            /* Pastikan konten memenuhi layar */
+        }
+    </style>
 </head>
 
 <body>
 
-    <?= $this->include('/front/layout/top_menu') ?>
+    <main class="main" id="top">
 
 
-    <?= $this->renderSection('content') ?>
+        <div class="container-fluid" data-layout="container">
+           
+            <div class="content">
 
-    <?= $this->include('/front/layout/bottom_menu') ?>
 
 
+                <?= $this->include('/front/layout/top_menu') ?>
+
+
+                <?= $this->renderSection('content') ?>
+
+                <?= $this->include('/front/layout/bottom_menu') ?>
+
+                <?= $this->include('/front/layout/modal') ?>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- link cdn mediapipe start -->
+
+    <!-- <script src="<?= base_url() ?>/front/js/mediapipe.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+
+    <!-- link cdn mediapipe end -->
+
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
     <!-- calendar -->
     <script src="<?= base_url() ?>assets/lib/fullcalendar/main.min.js"></script>

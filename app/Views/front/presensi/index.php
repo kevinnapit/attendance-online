@@ -1,36 +1,35 @@
 <?php $this->extend('front/layout/main') ?>
 <?php $this->section('content') ?>
-<div class="container mt-5">
-    <!-- Attendance Card -->
-    <div class="card">
-        <div class="card-header text-center bg-primary text-white">
-            <h3>Attendance</h3>
-        </div>
-        <div class="card-body">
-            <form id="attendanceForm">
-                <!-- Webcam -->
-                <input type="hidden" name="id" value="<?php if (isset($detail['id'])) echo $detail['id']; ?>" />
-                <div class="mb-3 text-center">
-                    <div id="my_camera" class="border mb-3" style="width: 320px; height: 240px;"></div>
-                    <button type="submit" id="btnAbsensi" class="btn btn-success">Absensi Masuk</button>
-                    <input type="hidden" name="image" id="imageInput">
-                </div>
 
-                <!-- Location -->
-                <div class="mb-3">
-                    <label for="location" class="form-label">Location</label>
-                    <input type="text" class="form-control" id="lokasi" readonly>
-                </div>
-
-                <!-- Map Preview -->
-                <div id="map" style="height: 250px;" class="mb-3"></div>
-            </form>
-        </div>
+<div class="card mb-3">
+    <div class="card-body">
+        <form id="add_submit">
+            <input type="hidden" name="id" value="<?php if (isset($detail['id'])) echo $detail['id']; ?>" />
+            <div style="text-align: center;">
+                <video id="input_video" style="display:none;"></video>
+                <canvas id="output_canvas" width="1280" height="720"></canvas>
+            </div>
+            <button type="button" class="btn btn-success" id="startCameraButton">Start Camera</button>
+            <?php if ($status > 0) { ?>
+                <button class="btn btn-danger" id="btnAbsensi">Absensi Pulang</button>
+            <?php } else { ?>
+                <button class="btn btn-primary" id="btnAbsensi">Absensi Masuk</button>
+            <?php } ?>
+        </form>
     </div>
 </div>
+
+
+<div class="card mb-3">
+    <div class="card-body">
+        <div id="map" style="width: 100%; height: 250px;"></div>
+    </div>
+</div>
+
+
 <?php $this->endSection() ?>
-<?php $this->section('script') ?>
-<script>
+<?php $this->Section('script') ?>
+<!-- <script>
     $(document).ready(function() {
         // Inisialisasi kamera
         Webcam.set({
@@ -39,7 +38,7 @@
             image_format: 'jpeg',
             jpeg_quality: 90
         });
-        Webcam.attach('my_camera');
+        Webcam.attach('.my_camera');
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
@@ -97,10 +96,10 @@
 
             $.ajax({
                 type: 'POST',
-                url: '<?= site_url('Presensi/submit') ?>',
+                url: '<?= site_url('admin2011/absensi/submit') ?>',
                 data: {
                     image: image, // Kirim gambar dalam format base64
-                    lokasi: lokasi //kirim lokasi
+                    lokasi: lokasi // Kirim lokasi
                 },
                 cache: false,
                 success: function(response) {
@@ -111,7 +110,7 @@
                             icon: "success"
                         }).then(() => {
                             // Redirect setelah berhasil absen
-                            window.location.href = '<?= site_url('home') ?>';
+                            window.location.href = '<?= site_url('admin2011/user') ?>';
                         });
                     } else {
                         Swal.fire({
@@ -131,5 +130,80 @@
             });
         });
     });
+</script> -->
+
+<script>
+    const videoElement = document.getElementById('input_video');
+    const canvasElement = document.getElementById('output_canvas');
+    const canvasCtx = canvasElement.getContext('2d');
+
+    // Initialize FaceMesh
+    const faceMesh = new FaceMesh({
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
+    });
+    faceMesh.setOptions({
+        maxNumFaces: 1,
+        refineLandmarks: true,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
+    });
+
+    faceMesh.onResults(onResults);
+
+    // Handle camera input
+    const camera = new Camera(videoElement, {
+        onFrame: async () => {
+            await faceMesh.send({
+                image: videoElement
+            });
+        },
+        width: 720,
+        height: 320,
+    });
+    camera.start();
+
+    function onResults(results) {
+        // Clear canvas
+        canvasCtx.save();
+        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+        // Draw image
+        canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+
+        // Draw face landmarks with grid
+        if (results.multiFaceLandmarks) {
+            for (const landmarks of results.multiFaceLandmarks) {
+                drawConnectors(canvasCtx, landmarks, FACEMESH_TESSELATION, {
+                    color: '#C0C0C070',
+                    lineWidth: 1
+                });
+                drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_EYE, {
+                    color: '#FF3030',
+                    lineWidth: 1
+                });
+                drawConnectors(canvasCtx, landmarks, FACEMESH_RIGHT_EYEBROW, {
+                    color: '#FF3030',
+                    lineWidth: 1
+                });
+                drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_EYE, {
+                    color: '#30FF30',
+                    lineWidth: 1
+                });
+                drawConnectors(canvasCtx, landmarks, FACEMESH_LEFT_EYEBROW, {
+                    color: '#30FF30',
+                    lineWidth: 1
+                });
+                drawConnectors(canvasCtx, landmarks, FACEMESH_FACE_OVAL, {
+                    color: '#E0E0E0',
+                    lineWidth: 1
+                });
+                drawConnectors(canvasCtx, landmarks, FACEMESH_LIPS, {
+                    color: '#E0E0E0',
+                    lineWidth: 1
+                });
+            }
+        }
+        canvasCtx.restore();
+    }
 </script>
-<?php $this->endSection() ?>
+<?php $this->endSection('script') ?>

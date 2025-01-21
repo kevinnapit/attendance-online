@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#000000" />
-    <title>Mobilekit Mobile UI Kit</title>
+    <title>Absensi Pegawai</title>
     <meta name="description" content="Mobilekit HTML Mobile UI Kit" />
     <meta name="keywords" content="bootstrap 4, mobile template, cordova, phonegap, mobile, html" />
     <link rel="icon" type="image/png" href="<?= base_url() ?>/front/img/favicon.png" sizes="32x32" />
@@ -53,7 +53,7 @@
                     <img src="<?= base_url() ?>/front/img/sample/avatar/avatar1.jpg" alt="avatar" class="imaged w64 rounded" />
                 </div>
                 <div id="user-info">
-                    <h2 id="user-name"><span><?php echo session()->get('admin_name') ?></span></h2>
+                    <h2 id="user-name"><span><?php echo session()->get('user_name') ?></span></h2>
                     <span id="user-role">Programmer</span>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                     <div class="list-menu">
                         <div class="item-menu text-center">
                             <div class="menu-icon">
-                                <a href="" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/user.png" /></a>
+                                <a href="<?= base_url('user/profile')?>" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/user.png" /></a>
                             </div>
                             <div class="menu-name">
                                 <span class="text-center">Profil</span>
@@ -73,7 +73,7 @@
                         </div>
                         <div class="item-menu text-center">
                             <div class="menu-icon">
-                                <a href="<?= base_url('admin2011/CutiUsers/index') ?>" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/leave.png" /></a>
+                                <a href="<?= base_url('user/CutiUsers/index') ?>" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/leave.png" /></a>
                             </div>
                             <div class="menu-name">
                                 <span class="text-center">Cuti</span>
@@ -89,7 +89,7 @@
                         </div>
                         <div class="item-menu text-center">
                             <div class="menu-icon">
-                                <a href="<?= base_url('admin2011/logout') ?>" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/power.png" /></a>
+                                <a href="<?= base_url('user/logout') ?>" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/power.png" /></a>
                             </div>
                             <div class="menu-name">Keluar</div>
                         </div>
@@ -362,13 +362,13 @@
                 <strong>Home</strong>
             </div>
         </a>
-        <a href="<?= base_url('admin2011/calendar/index') ?>" class="item active">
+        <a href="<?= base_url('user/calendar/index') ?>" class="item active">
             <div class="col">
                 <i class="fas fa-calendar-alt fa-3x"></i>
                 <strong>Calendar</strong>
             </div>
         </a>
-        <a href="<?= base_url('admin2011/absensi/index') ?>" class="item">
+        <a href="<?= base_url('user/absensi/index') ?>" class="item">
             <div class="col">
                 <div class="action-button large">
                     <i class="fas fa-camera text-white fa-3x"></i>

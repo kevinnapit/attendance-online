@@ -76,7 +76,7 @@
                                     <h5>Log in</h5>
                                 </div>
                             </div>
-                            <form method="POST" action="<?php echo site_url('auth/login') ?>">
+                            <form method="POST" action="<?php echo site_url('user/login') ?>">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="username" placeholder="Username" value="<?php if ($session->getFlashdata('username')) echo $session->getFlashdata('username') ?>" />
                                 </div>
@@ -90,7 +90,7 @@
                                             <label class="custom-control-label" for="basic-checkbox">Remember me</label>
                                         </div>
                                     </div>
-                                    <div class="col-auto"><a class="fs--1" href="<?php echo site_url('admin2011/forgotpassword') ?>">Forgot Password?</a></div>
+                                    <div class="col-auto"><a class="fs--1" href="<?php echo site_url('user/forgotpassword') ?>">Forgot Password?</a></div>
                                 </div>
                                 <div class="form-group">
                                     <button class="btn btn-primary btn-block mt-3" type="submit" name="submit">Log in</button>
