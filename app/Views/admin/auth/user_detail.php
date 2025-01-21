@@ -302,7 +302,7 @@
                         </div>
                         <div class="tab-content">
                             <h6 class="mt-4">Data Keluarga</h6>
-                            <span class="badge badge-primary" style="cursor: pointer;" onclick="addpendidikan(<?= esc($user['id']) ?>)">
+                            <span class="badge badge-primary" style="cursor: pointer;" onclick="addkeluarga(<?= esc($user['id']) ?>)">
                                 <i class="fas fa-plus-square"></i> Tambah Baru
                             </span>
                             <!-- Menampilkan pendidikan yang terkait dengan pengguna -->
@@ -310,24 +310,62 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-
+                                            <th>#</th>
+                                            <th>Nama Pasangan</th>
+                                            <th>NIK Pasangan</th>
+                                            <th>No Akta Kawin</th>
+                                            <th>Nama Mertua Laki-laki</th>
+                                            <th>NIK Mertua Laki-laki</th>
+                                            <th>Nama Mertua Perempuan</th>
+                                            <th>NIK Mertua Perempuan</th>
+                                            <th>Attachment</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php if (!empty($keluarga)) : ?>
-                                            <?php foreach ($keluarga as $item) : ?>
-
+                                            <?php foreach ($keluarga as $index => $item) : ?>
+                                                <tr>
+                                                    <td><?= $index + 1 ?></td>
+                                                    <td><?= esc($item['nama_pasangan']) ?></td>
+                                                    <td><?= esc($item['nik_pasangan']) ?></td>
+                                                    <td><?= esc($item['no_akta_kawin']) ?></td>
+                                                    <td><?= esc($item['nama_mertua_lk']) ?></td>
+                                                    <td><?= esc($item['nik_mertua_lk']) ?></td>
+                                                    <td><?= esc($item['nama_mertua_pr']) ?></td>
+                                                    <td><?= esc($item['nik_mertua_pr']) ?></td>
+                                                    <td>
+                                                        <?php if (!empty($item['attachment'])) : ?>
+                                                            <a href="<?= base_url('uploads/file/' . esc($item['attachment'])); ?>" target="_blank">
+                                                                <button class="btn btn-info btn-sm mr-1"><i class="fas fa-eye"></i></button>
+                                                            </a>
+                                                        <?php else : ?>
+                                                            <span>Tidak ada lampiran</span>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                    <td>
+                                                        <!-- Tombol Edit -->
+                                                        <button class="btn btn-sm btn-warning" onclick="editkeluarga(<?= $item['id']; ?>)">
+                                                            <i class="fas fa-pen-square"></i>
+                                                        </button>
+                                                        <!-- Tombol Hapus -->
+                                                        <button class="btn btn-sm btn-danger" onclick="deletekeluarga(<?= $item['id']; ?>)">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
                                             <?php endforeach; ?>
                                         <?php else : ?>
                                             <tr>
-                                                <td colspan="5" class="text-center">Tidak ada data keluarga.</td>
+                                                <td colspan="9" class="text-center">Tidak ada data keluarga.</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
                                 </table>
                             </div>
+
                             <h6 class="mt-4">Data Anak</h6>
-                            <span class="badge badge-primary" style="cursor: pointer;" onclick="addpeningkatan(<?= esc($user['id']) ?>)">
+                            <span class="badge badge-primary" style="cursor: pointer;" onclick="addanak(<?= esc($user['id']) ?>)">
                                 <i class="fas fa-plus-square"></i> Tambah Baru
                             </span>
                             <!-- Menampilkan pendidikan yang terkait dengan pengguna -->
@@ -335,25 +373,54 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-
+                                            <th>#</th>
+                                            <th>Nama Anak</th>
+                                            <th>NIK</th>
+                                            <th>Nomor Akta</th>
+                                            <th>Tanggal Akta</th>
+                                            <th>Attachment</th>
+                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if (!empty($belajar)) : ?>
-                                            <?php foreach ($belajar as $data) : ?>
+                                        <?php if (!empty($anak)) : ?>
+                                            <?php foreach ($anak as $index => $data) : ?>
                                                 <tr>
-
-
+                                                    <td><?= $index + 1 ?></td>
+                                                    <td><?= esc($data['nama_anak']) ?></td>
+                                                    <td><?= esc($data['nik']) ?></td>
+                                                    <td><?= esc($data['nomor_akta']) ?></td>
+                                                    <td><?= esc($data['tgl_akta']) ?></td>
+                                                    <td>
+                                                        <?php if (!empty($data['attachment'])) : ?>
+                                                            <a href="<?= base_url('uploads/file/' . esc($data['attachment'])); ?>" target="_blank">
+                                                                <button class="btn btn-info btn-sm mr-1"><i class="fas fa-eye"></i> Lampiran</button>
+                                                            </a>
+                                                        <?php else : ?>
+                                                            <span>Tidak ada lampiran</span>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                    <td>
+                                                        <!-- Tombol Edit -->
+                                                        <button class="btn btn-sm btn-warning" onclick="editanak(<?= $data['id']; ?>)">
+                                                            <i class="fas fa-pen-square"></i>
+                                                        </button>
+                                                        <!-- Tombol Hapus -->
+                                                        <button class="btn btn-sm btn-danger" onclick="deleteanak(<?= $data['id']; ?>)">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         <?php else : ?>
                                             <tr>
-                                                <td colspan="5" class="text-center">Tidak ada data Anak.</td>
+                                                <td colspan="6" class="text-center">Tidak ada data Anak.</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
                                 </table>
                             </div>
+
                         </div>
                         <div class="tab-content">
                             <span class="badge badge-primary" style="cursor: pointer;" onclick="addfolder(<?= esc($user['id']) ?>)">
@@ -376,9 +443,10 @@
                                                 // Cek apakah folder memiliki attachment
                                                 $folderImage = $data['attachment'] ? 'uploads/folder/' . $data['attachment'] : 'uploads/folder/folder.png';
                                                 ?>
-                                                <a href="<?= site_url('admin2011/arsip/detail/' . $data['id']) ?>" class="folder-link">
+                                                <a href="<?= site_url('admin2011/arsip/detail/' . esc($user['id']) . '/' . $data['id']) ?>" class="folder-link">
                                                     <img src="<?= base_url($folderImage) ?>" alt="Folder Icon" class="img-fluid" style="width: 60px; height: 60px;">
                                                 </a>
+
 
                                                 <!-- Kategori Folder dan Tombol Hapus -->
                                                 <div class="d-flex justify-content-center align-items-center mt-2">
@@ -525,6 +593,32 @@
         });
     }
 
+    function addkeluarga(id) {
+        // Load the modal content
+        $('#editor_add').load('<?= site_url('admin2011/keluarga/add/') ?>' + id, function() {
+            // After loading, show the modal
+            $('#add').modal({
+                show: true
+            });
+
+            // Set the user ID to the hidden input field inside the modal
+            $('#id_user').val(id);
+        });
+    }
+
+    function addanak(id) {
+        // Load the modal content
+        $('#editor_add').load('<?= site_url('admin2011/keluarga/addanak/') ?>' + id, function() {
+            // After loading, show the modal
+            $('#add').modal({
+                show: true
+            });
+
+            // Set the user ID to the hidden input field inside the modal
+            $('#id_user').val(id);
+        });
+    }
+
     function editdata(iddata) {
         $.get("<?= site_url('admin2011/pendidikan/editpendidikan') ?>/" + iddata, function(data, status) {
             $("#editor_add").html(data);
@@ -555,6 +649,20 @@
 
     function editdisiplin(iddata) {
         $.get("<?= site_url('admin2011/disiplin/edit') ?>/" + iddata, function(data, status) {
+            $("#editor_add").html(data);
+            $('#add').modal('toggle');
+        });
+    }
+
+    function editkeluarga(iddata) {
+        $.get("<?= site_url('admin2011/keluarga/edit') ?>/" + iddata, function(data, status) {
+            $("#editor_add").html(data);
+            $('#add').modal('toggle');
+        });
+    }
+
+    function editanak(iddata) {
+        $.get("<?= site_url('admin2011/keluarga/editanak') ?>/" + iddata, function(data, status) {
             $("#editor_add").html(data);
             $('#add').modal('toggle');
         });
@@ -731,6 +839,60 @@
             $.ajax({
                 type: 'DELETE',
                 url: "<?= site_url('admin2011/arsip/deletefile') ?>/" + iddata,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    $('#alert_modal').modal('hide'); // Menutup modal
+                    // Menampilkan pesan sukses
+                    showToast('success', response.message);
+                    // Me-refresh halaman setelah penghapusan data
+                    location.reload(); // Menyegarkan halaman
+                },
+                error: function(xhr, status, error) {
+                    // Tanggapan error
+                    showToastError(error, xhr.responseJSON);
+                }
+            });
+        });
+    }
+
+    function deletekeluarga(iddata) {
+        // Menampilkan modal konfirmasi
+        $('#alert_modal').modal('show');
+
+        // Jika tombol "Yes" diklik
+        $("#click_yes").off("click").on("click", function() {
+            $.ajax({
+                type: 'DELETE',
+                url: "<?= site_url('admin2011/keluarga/delete') ?>/" + iddata,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    $('#alert_modal').modal('hide'); // Menutup modal
+                    // Menampilkan pesan sukses
+                    showToast('success', response.message);
+                    // Me-refresh halaman setelah penghapusan data
+                    location.reload(); // Menyegarkan halaman
+                },
+                error: function(xhr, status, error) {
+                    // Tanggapan error
+                    showToastError(error, xhr.responseJSON);
+                }
+            });
+        });
+    }
+
+    function deleteanak(iddata) {
+        // Menampilkan modal konfirmasi
+        $('#alert_modal').modal('show');
+
+        // Jika tombol "Yes" diklik
+        $("#click_yes").off("click").on("click", function() {
+            $.ajax({
+                type: 'DELETE',
+                url: "<?= site_url('admin2011/keluarga/deleteanak') ?>/" + iddata,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },

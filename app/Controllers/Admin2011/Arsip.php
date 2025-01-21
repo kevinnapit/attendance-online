@@ -44,12 +44,16 @@ class Arsip extends BaseController
             return redirect()->to('/admin')->with('error', 'Pengguna tidak ditemukan.');
         }
     }
-    public function add_file($id)
+    public function add_file($id, $folder_id = 0)  // Mengambil id_user dan id folder
     {
         $user = $this->model->find($id);
+        $folder = $this->folder->find($folder_id);  // Ambil data folder berdasarkan id
 
         if ($user) {
             $file = $this->file->where('id_user', $id)->findAll();
+
+            // Ambil id_kategori dari folder, jika ada, jika tidak set ke 0
+            $id_kategori = $folder ? $folder['id'] : 0;  // Menggunakan id dari folder sebagai id_kategori
 
             $data = [
                 'title' => "Tambah file",
@@ -57,7 +61,8 @@ class Arsip extends BaseController
                 'file' => $file,
                 'action' => "add",
                 'alert' => "",
-                'tombol' => "+ Tambah file"
+                'tombol' => "+ Tambah file",
+                'id_kategori' => $id_kategori  // Kirim id_kategori ke view
             ];
 
             return view('admin/auth/arsip/addfile', $data);
@@ -65,6 +70,7 @@ class Arsip extends BaseController
             return redirect()->to('/admin')->with('error', 'Pengguna tidak ditemukan.');
         }
     }
+
 
     public function savefolder()
     {
@@ -170,7 +176,10 @@ class Arsip extends BaseController
     {
         $user = $this->model->find($id);
         $folder = $this->folder->find($id);
-        $file = $this->file->find($id);
+
+        // Ambil file berdasarkan id_user dan id_kategori
+        // Misalnya, jika file terkait dengan folder menggunakan id_kategori
+        $file = $this->file->where('id_user', $id)->where('id_kategori', $folder['id'])->findAll();
 
         if ($folder) {
             $data = [
@@ -184,6 +193,7 @@ class Arsip extends BaseController
             return redirect()->to('/folder')->with('error', 'Folder tidak ditemukan.');
         }
     }
+
 
     function deletefolder($id)
     {

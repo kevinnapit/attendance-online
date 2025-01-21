@@ -11,13 +11,15 @@ use App\Models\MutasiModel;
 use App\Models\DisiplinModel;
 use App\Models\FolderModel;
 use App\Models\FileModel;
+use App\Models\KeluargaModel;
+use App\Models\AnakModel;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\RequestTrait;
 
 class Admin extends BaseController
 {
     use ResponseTrait;
-    var $model, $pendidikan, $belajar, $pangkat, $mutasi, $disiplin, $folder, $file, $validation;
+    var $model, $pendidikan, $belajar, $pangkat, $mutasi, $disiplin, $folder, $file, $keluarga, $anak, $validation;
     function __construct()
     {
         $this->model = new AdminModel();
@@ -28,6 +30,8 @@ class Admin extends BaseController
         $this->disiplin = new DisiplinModel();
         $this->folder = new FolderModel();
         $this->file = new FileModel();
+        $this->keluarga = new KeluargaModel();
+        $this->anak = new AnakModel();
         $this->validation = \Config\Services::validation();
         helper("cookie");
         helper("global_fungsi_helper");
@@ -49,6 +53,8 @@ class Admin extends BaseController
         $disiplin = $this->disiplin->where('id_user', $id)->findAll();
         $folder = $this->folder->where('id_user', $id)->findAll();
         $file = $this->file->getFilesByCategoryZero($id);
+        $keluarga = $this->keluarga->where('id_user', $id)->findAll();
+        $anak = $this->anak->where('id_user', $id)->findAll();
         return view('admin/auth/user_detail', [
             'user' => $user,
             'pendidikan' => $pendidikan,
@@ -58,6 +64,8 @@ class Admin extends BaseController
             'disiplin' => $disiplin,
             'folder' => $folder,
             'file' => $file,
+            'keluarga' => $keluarga,
+            'anak' => $anak,
         ]);
     }
 

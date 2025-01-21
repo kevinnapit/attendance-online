@@ -26,5 +26,5 @@ class KeluargaModel extends Model
         'no_akta_kawin',
         'attachment'
     ];
-    protected $useTimestamps = true;
+    protected $useTimestamps = false;
 }

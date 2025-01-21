@@ -6,17 +6,43 @@
     <div class="card-header">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Library</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Data</li>
+                <!-- Link untuk kembali ke halaman sebelumnya -->
+                <li class="breadcrumb-item"><a href="<?= site_url('admin2011/admin/view/' . esc($user['id'])) ?>">Back</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><?= esc($folder['kategori']) ?></li>
             </ol>
         </nav>
+        <span class="badge badge-danger" style="cursor: pointer;" onclick="addfile(<?= esc($user['id']) ?>, <?= esc($folder['id']) ?>)">
+            <i class="fas fa-upload"></i> Tambah File
+        </span>
+
     </div>
     <div class="card-body bg-light overflow-hidden">
         <div class="row">
             <div class="col-12">
-            </div>
+                <?php if (!empty($file)) : ?>
+                    <?php foreach ($file as $data) : ?>
+                        <div class="col-md-2 col-sm-3 mb-4">
+                            <div class="text-center">
+                                <!-- Gambar dan nama file -->
+                                <a href="<?= base_url() ?>uploads/file/<?= esc($data['attachments']); ?>" target="_blank">
+                                    <img class="mr-2" src="<?= base_url() ?>uploads/file/file.png" alt="File Icon" height="60" />
+                                </a>
 
+                                <!-- Tombol Hapus -->
+                                <small class="mt-2"><?= esc($data['attachments']); ?></small><!-- Menampilkan nama file -->
+                                <button class="btn btn-link p-0" onclick="deletefile(<?= $data['id']; ?>)">
+                                    <i class="fas fa-trash-alt" style="font-size: 12px;"></i>
+                                </button>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <div class="col-12">
+                        <p class="text-center">Tidak ada file ditemukan.</p>
+                    </div>
+                <?php endif; ?>
+
+            </div>
         </div>
     </div>
 </div>
@@ -24,9 +50,9 @@
 <?php $this->section('script') ?>
 
 <script>
-    function addpendidikan(id) {
-        // Load the modal content
-        $('#editor_add').load('<?= site_url('admin2011/pendidikan/addpendidikan/') ?>' + id, function() {
+    function addfile(id, id_kategori) {
+        // Load the modal content with both user id and category id
+        $('#editor_add').load('<?= site_url('admin2011/arsip/add_file/') ?>' + id + '/' + id_kategori, function() {
             // After loading, show the modal
             $('#add').modal({
                 show: true
@@ -34,283 +60,10 @@
 
             // Set the user ID to the hidden input field inside the modal
             $('#id_user').val(id);
+            $('#id_kategori').val(id_kategori); // Set the id_kategori to the hidden input field
         });
     }
 
-    function addpeningkatan(id) {
-        // Load the modal content
-        $('#editor_add').load('<?= site_url('admin2011/pendidikan/addpeningkatan/') ?>' + id, function() {
-            // After loading, show the modal
-            $('#add').modal({
-                show: true
-            });
-
-            // Set the user ID to the hidden input field inside the modal
-            $('#id_user').val(id);
-        });
-    }
-
-    function addpangkat(id) {
-        // Load the modal content
-        $('#editor_add').load('<?= site_url('admin2011/pangkat/add/') ?>' + id, function() {
-            // After loading, show the modal
-            $('#add').modal({
-                show: true
-            });
-
-            // Set the user ID to the hidden input field inside the modal
-            $('#id_user').val(id);
-        });
-    }
-
-    function addmutasi(id) {
-        // Load the modal content
-        $('#editor_add').load('<?= site_url('admin2011/mutasi/add/') ?>' + id, function() {
-            // After loading, show the modal
-            $('#add').modal({
-                show: true
-            });
-
-            // Set the user ID to the hidden input field inside the modal
-            $('#id_user').val(id);
-        });
-    }
-
-    function adddisiplin(id) {
-        // Load the modal content
-        $('#editor_add').load('<?= site_url('admin2011/disiplin/add/') ?>' + id, function() {
-            // After loading, show the modal
-            $('#add').modal({
-                show: true
-            });
-
-            // Set the user ID to the hidden input field inside the modal
-            $('#id_user').val(id);
-        });
-    }
-
-    function addfolder(id) {
-        // Load the modal content
-        $('#editor_add').load('<?= site_url('admin2011/arsip/add_folder/') ?>' + id, function() {
-            // After loading, show the modal
-            $('#add').modal({
-                show: true
-            });
-
-            // Set the user ID to the hidden input field inside the modal
-            $('#id_user').val(id);
-        });
-    }
-
-    function addfile(id) {
-        // Load the modal content
-        $('#editor_add').load('<?= site_url('admin2011/arsip/add_file/') ?>' + id, function() {
-            // After loading, show the modal
-            $('#add').modal({
-                show: true
-            });
-
-            // Set the user ID to the hidden input field inside the modal
-            $('#id_user').val(id);
-        });
-    }
-
-    function editdata(iddata) {
-        $.get("<?= site_url('admin2011/pendidikan/editpendidikan') ?>/" + iddata, function(data, status) {
-            $("#editor_add").html(data);
-            $('#add').modal('toggle');
-        });
-    }
-
-    function editpeningkatan(iddata) {
-        $.get("<?= site_url('admin2011/pendidikan/editpeningkatan') ?>/" + iddata, function(data, status) {
-            $("#editor_add").html(data);
-            $('#add').modal('toggle');
-        });
-    }
-
-    function editpangkat(iddata) {
-        $.get("<?= site_url('admin2011/pangkat/edit') ?>/" + iddata, function(data, status) {
-            $("#editor_add").html(data);
-            $('#add').modal('toggle');
-        });
-    }
-
-    function editmutasi(iddata) {
-        $.get("<?= site_url('admin2011/mutasi/edit') ?>/" + iddata, function(data, status) {
-            $("#editor_add").html(data);
-            $('#add').modal('toggle');
-        });
-    }
-
-    function editdisiplin(iddata) {
-        $.get("<?= site_url('admin2011/disiplin/edit') ?>/" + iddata, function(data, status) {
-            $("#editor_add").html(data);
-            $('#add').modal('toggle');
-        });
-    }
-
-    function deletedata(iddata) {
-        // Menampilkan modal konfirmasi
-        $('#alert_modal').modal('show');
-
-        // Jika tombol "Yes" diklik
-        $("#click_yes").off("click").on("click", function() {
-            $.ajax({
-                type: 'DELETE',
-                url: "<?= site_url('admin2011/pendidikan/deletependidikan') ?>/" + iddata,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    $('#alert_modal').modal('hide'); // Menutup modal
-                    // Menampilkan pesan sukses
-                    showToast('success', response.message);
-                    // Me-refresh halaman setelah penghapusan data
-                    location.reload(); // Menyegarkan halaman
-                },
-                error: function(xhr, status, error) {
-                    // Tanggapan error
-                    showToastError(error, xhr.responseJSON);
-                }
-            });
-        });
-    }
-
-    function deletepeningkatan(iddata) {
-        // Menampilkan modal konfirmasi
-        $('#alert_modal').modal('show');
-
-        // Jika tombol "Yes" diklik
-        $("#click_yes").off("click").on("click", function() {
-            $.ajax({
-                type: 'DELETE',
-                url: "<?= site_url('admin2011/pendidikan/deletepeningkatan') ?>/" + iddata,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    $('#alert_modal').modal('hide'); // Menutup modal
-                    // Menampilkan pesan sukses
-                    showToast('success', response.message);
-                    // Me-refresh halaman setelah penghapusan data
-                    location.reload(); // Menyegarkan halaman
-                },
-                error: function(xhr, status, error) {
-                    // Tanggapan error
-                    showToastError(error, xhr.responseJSON);
-                }
-            });
-        });
-    }
-
-    function deletepangkat(iddata) {
-        // Menampilkan modal konfirmasi
-        $('#alert_modal').modal('show');
-
-        // Jika tombol "Yes" diklik
-        $("#click_yes").off("click").on("click", function() {
-            $.ajax({
-                type: 'DELETE',
-                url: "<?= site_url('admin2011/pangkat/delete') ?>/" + iddata,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    $('#alert_modal').modal('hide'); // Menutup modal
-                    // Menampilkan pesan sukses
-                    showToast('success', response.message);
-                    // Me-refresh halaman setelah penghapusan data
-                    location.reload(); // Menyegarkan halaman
-                },
-                error: function(xhr, status, error) {
-                    // Tanggapan error
-                    showToastError(error, xhr.responseJSON);
-                }
-            });
-        });
-    }
-
-    function deletemutasi(iddata) {
-        // Menampilkan modal konfirmasi
-        $('#alert_modal').modal('show');
-
-        // Jika tombol "Yes" diklik
-        $("#click_yes").off("click").on("click", function() {
-            $.ajax({
-                type: 'DELETE',
-                url: "<?= site_url('admin2011/mutasi/delete') ?>/" + iddata,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    $('#alert_modal').modal('hide'); // Menutup modal
-                    // Menampilkan pesan sukses
-                    showToast('success', response.message);
-                    // Me-refresh halaman setelah penghapusan data
-                    location.reload(); // Menyegarkan halaman
-                },
-                error: function(xhr, status, error) {
-                    // Tanggapan error
-                    showToastError(error, xhr.responseJSON);
-                }
-            });
-        });
-    }
-
-    function deletedisiplin(iddata) {
-        // Menampilkan modal konfirmasi
-        $('#alert_modal').modal('show');
-
-        // Jika tombol "Yes" diklik
-        $("#click_yes").off("click").on("click", function() {
-            $.ajax({
-                type: 'DELETE',
-                url: "<?= site_url('admin2011/disiplin/delete') ?>/" + iddata,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    $('#alert_modal').modal('hide'); // Menutup modal
-                    // Menampilkan pesan sukses
-                    showToast('success', response.message);
-                    // Me-refresh halaman setelah penghapusan data
-                    location.reload(); // Menyegarkan halaman
-                },
-                error: function(xhr, status, error) {
-                    // Tanggapan error
-                    showToastError(error, xhr.responseJSON);
-                }
-            });
-        });
-    }
-
-    function deletefolder(iddata) {
-        // Menampilkan modal konfirmasi
-        $('#alert_modal').modal('show');
-
-        // Jika tombol "Yes" diklik
-        $("#click_yes").off("click").on("click", function() {
-            $.ajax({
-                type: 'DELETE',
-                url: "<?= site_url('admin2011/arsip/deletefolder') ?>/" + iddata,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    $('#alert_modal').modal('hide'); // Menutup modal
-                    // Menampilkan pesan sukses
-                    showToast('success', response.message);
-                    // Me-refresh halaman setelah penghapusan data
-                    location.reload(); // Menyegarkan halaman
-                },
-                error: function(xhr, status, error) {
-                    // Tanggapan error
-                    showToastError(error, xhr.responseJSON);
-                }
-            });
-        });
-    }
 
     function deletefile(iddata) {
         // Menampilkan modal konfirmasi
