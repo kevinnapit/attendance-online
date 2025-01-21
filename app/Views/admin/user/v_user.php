@@ -84,7 +84,7 @@
                                 <a href="" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/clock.png" /></a>
                             </div>
                             <div class="menu-name">
-                                <span class="text-center">Histori</span>
+                                <span class="text-center">Riwayat</span>
                             </div>
                         </div>
                         <div class="item-menu text-center">

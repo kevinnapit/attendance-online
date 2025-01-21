@@ -76,6 +76,9 @@
                                 <div class="col-auto">
                                     <h5>Log in</h5>
                                 </div>
+                                <div class="col-auto">
+                                    <p class="fs--1 text-600 mb-0">or <a href="<?php echo site_url("register") ?>">Create an account</a></p>
+                                </div>
                             </div>
                             <form method="POST" action="<?php echo site_url('admin2011/login') ?>">
                                 <div class="form-group">

@@ -3,7 +3,7 @@
 <?php $this->section('content') ?>
 <div class="card mb-3">
     <div class="card-body">
-        <h3 class="mb-0">Attendance</h3>
+        <h3 class="mb-0">Attendance online</h3>
     </div>
 </div>
 
@@ -32,8 +32,6 @@
 
 <?php $this->section('script') ?>
 <script>
-
-
     $(document).ready(function() {
         // Inisialisasi kamera
         Webcam.set({
@@ -75,13 +73,10 @@
             // posisi kantor
 
             var kantoricon = L.icon({
-                iconUrl: '<?= base_url('front/img/building.png') ?>',
-
-                iconSize: [38, 95], // size of the icon
-                shadowSize: [50, 64], // size of the shadow
-                iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
-                popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+                iconUrl: '<?= base_url('front/buildings/gedungg.png') ?>',
             });
+
+
             L.marker([<?= $lokasi['lokasi_kantor'] ?>], {
                     icon: kantoricon
                 }).addTo(map)

@@ -75,7 +75,7 @@
                                 <a class="nav-link" href="<?= site_url('admin2011/admin') ?>">
                                     <div class="d-flex align-items-center">
                                         <span class="nav-link-icon"><i class="fas fa-users-cog"></i></span>
-                                        <span class="nav-link-text">Admins</span>
+                                        <span class="nav-link-text">User</span>
                                     </div>
                                 </a>
                             </li>

@@ -34,6 +34,8 @@
                 <button class="btn btn-falcon-default btn-sm px-3 ml-2" type="button">Message</button>
                 <hr class="border-dashed my-4 d-lg-none" />
             </div>
+            <br>
+        
         </div>
     </div>
 </div>
