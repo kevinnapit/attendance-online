@@ -48,7 +48,7 @@ class CreateTblTugasbelajarTable extends Migration
         $this->forge->addPrimaryKey('id');
 
         // Foreign key (id_user)
-        $this->forge->addForeignKey('id_user', 'tb_admin', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('id_user', 'tb_users', 'id', 'CASCADE', 'CASCADE');
 
         // Create the table
         $this->forge->createTable('tbl_tugasbelajar');

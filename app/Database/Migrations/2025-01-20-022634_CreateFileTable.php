@@ -18,6 +18,7 @@ class CreateFileTable extends Migration
             'id_user' => [
                 'type' => 'INT',
                 'constraint' => 11,
+                'unsigned' => true
             ],
             'id_kategori' => [
                 'type' => 'INT',

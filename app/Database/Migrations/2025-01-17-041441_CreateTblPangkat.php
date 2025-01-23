@@ -18,6 +18,7 @@ class CreateTblPangkat extends Migration
             'id_user' => [
                 'type'       => 'INT',
                 'constraint' => 11,
+                'unsigned' => true
             ],
             'jenis_kp' => [
                 'type'       => 'VARCHAR',
@@ -68,7 +69,7 @@ class CreateTblPangkat extends Migration
 
         // Menambahkan primary key dan index
         $this->forge->addPrimaryKey('id');
-        $this->forge->addForeignKey('id_user', 'tb_admin', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('id_user', 'tb_users', 'id', 'CASCADE', 'CASCADE');
 
         // Membuat tabel
         $this->forge->createTable('tbl_pangkat');

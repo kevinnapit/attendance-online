@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,700&display=swap" />
     <link rel="stylesheet" href="<?= base_url() ?>/front/fontawesome-free/css/all.min.css" />
     <link rel="stylesheet" href="<?= base_url() ?>/front/css/style.css" />
+
     <style>
         .icon-small {
             display: inline-block;
@@ -49,11 +50,15 @@
     <div id="appCapsule">
         <div class="section" style="background-color: #7E60BF" id="user-section">
             <div id="user-detail">
-                <div class="avatar">
-                    <img src="<?= base_url() ?>/front/img/sample/avatar/avatar1.jpg" alt="avatar" class="imaged w64 rounded" />
+
+                <div class="d-flex justify-content-center align-items-center rounded-circle bg-light border" style="width: 70px; height: 70px; overflow: hidden;">
+                    <img src="<?php if (session()->get('user_picture')) {
+                                    echo base_url() . getenv('dir.upload.profile') . session()->get('user_picture') ?><?php } else {
+                                                                                                                        echo base_url() ?>assets/img/team/avatar.png<?php } ?>" alt="avatar" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;" />
                 </div>
+
                 <div id="user-info">
-                    <h2 id="user-name"><span><?php echo session()->get('user_name') ?></span></h2>
+                    <h4 id="user-name"><span><?php echo session()->get('user_name') ?></span></h4>
                     <span id="user-role">Programmer</span>
                 </div>
             </div>
@@ -65,7 +70,7 @@
                     <div class="list-menu">
                         <div class="item-menu text-center">
                             <div class="menu-icon">
-                                <a href="<?= base_url('user/profile')?>" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/user.png" /></a>
+                                <a href="<?= base_url('user/profile') ?>" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/user.png" /></a>
                             </div>
                             <div class="menu-name">
                                 <span class="text-center">Profil</span>
@@ -73,7 +78,7 @@
                         </div>
                         <div class="item-menu text-center">
                             <div class="menu-icon">
-                                <a href="<?= base_url('user/CutiUsers/index') ?>" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/leave.png" /></a>
+                                <a href="<?= base_url('user/cuti_izin/index') ?>" class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/leave.png" /></a>
                             </div>
                             <div class="menu-name">
                                 <span class="text-center">Cuti</span>
@@ -189,7 +194,7 @@
                             <div class="card-body">
                                 <div class="presencecontent">
                                     <div class="iconpresence primary">
-                                        <i class="fas fa-check"></i>
+                                        <i class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/checked.png" /></i>
                                     </div>
                                     <div class="presencedetail">
                                         <h4 class="rekappresencetitle">Hadir</h4>
@@ -204,7 +209,7 @@
                             <div class="card-body">
                                 <div class="presencecontent">
                                     <div class="iconpresence green">
-                                        <i class="fas fa-info"></i>
+                                        <i class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/evaluation.png" /></i>
                                     </div>
                                     <div class="presencedetail">
                                         <h4 class="rekappresencetitle">Izin</h4>
@@ -221,7 +226,7 @@
                             <div class="card-body">
                                 <div class="presencecontent">
                                     <div class="iconpresence danger">
-                                        <i class="fas fa-sad-tear"></i>
+                                        <i class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/prescription.png" /></i>
                                     </div>
                                     <div class="presencedetail">
                                         <h4 class="rekappresencetitle">Sakit</h4>
@@ -236,10 +241,10 @@
                             <div class="card-body">
                                 <div class="presencecontent">
                                     <div class="iconpresence warning">
-                                        <i class="fa fa-clock"></i>
+                                        <i class="green custom-icon" style="font-size: 40px"><img class="icon-small" src="<?= base_url() ?>front/icons/late.png" /></i>
                                     </div>
                                     <div class="presencedetail">
-                                        <h4 class="rekappresencetitle">Terlambat</h4>
+                                        <h4 class="rekappresencetitle">terlambat</h4>
                                         <span class="rekappresencedetail"><?= esc($keterlambatan) ?></span>
                                     </div>
                                 </div>

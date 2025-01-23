@@ -1,7 +1,7 @@
 <nav class="navbar navbar-light navbar-glass navbar-top sticky-kit navbar-expand">
 
   <button class="btn navbar-toggler-humburger-icon navbar-toggler mr-1 mr-sm-3" type="button" data-toggle="collapse" data-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
-  <a class="navbar-brand mr-1 mr-sm-3" href="<?php echo site_url("admin2011/dashboard") ?>">
+  <a class="navbar-brand mr-1 mr-sm-3" href="<?php echo site_url("user/dashboard") ?>">
     <div class="d-flex align-items-center"><img class="mr-2" src="<?= base_url() ?>assets/img/logos/logo.svg" alt="" height="40" /></div>
   </a>
   <ul class="navbar-nav align-items-center d-none d-lg-block">
@@ -21,7 +21,7 @@
 
     <!-- navbar untuk notifikasi -->
     <li class="nav-item dropdown dropdown-on-hover">
-      <a class="nav-link notification-indicator notification-indicator-primary px-0 icon-indicator" id="navbarDropdownNotification" href="<?= base_url('admin2011/cutiizin/index') ?>" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <a class="nav-link notification-indicator notification-indicator-primary px-0 icon-indicator" id="navbarDropdownNotification" href="<?= base_url('user/cutiizin/index') ?>" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <svg class="svg-inline--fa fa-bell fa-w-14 fs-4" data-fa-transform="shrink-6" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bell" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="" style="transform-origin: 0.4375em 0.5em;">
           <g transform="translate(224 256)">
             <g transform="translate(0, 0) scale(0.625, 0.625) rotate(0 0 0)">
@@ -45,17 +45,17 @@
 
       <a class="nav-link pr-0" id="navbarDropdownUser" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <div class="avatar avatar-xl">
-          <img class="rounded-circle" src="<?php if (session()->get('admin_picture')) {
-                                              echo base_url() . getenv('dir.upload.upload') . session()->get('admin_picture') ?><?php } else {
+          <img class="rounded-circle" src="<?php if (session()->get('user_picture')) {
+                                              echo base_url() . getenv('dir.upload.upload') . session()->get('user_picture') ?><?php } else {
                                                                                                                                 echo base_url() ?>assets/img/team/avatar.png<?php } ?>" alt="Image" id="photo_profile_in_top_menu" />
         </div>
       </a>
       <div class="dropdown-menu dropdown-menu-right py-0" aria-labelledby="navbarDropdownUser">
         <div class="bg-white rounded-soft py-2">
-          <a class="dropdown-item font-weight-bold text-warning" href="<?php echo site_url("admin2011/profile") ?>"><span class="fas fa-user mr-1"></span><span><?php echo session()->get('admin_name') ?></span></a>
+          <a class="dropdown-item font-weight-bold text-warning" href="<?php echo site_url("user/profile") ?>"><span class="fas fa-user mr-1"></span><span><?php echo session()->get('user_name') ?></span></a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="<?php echo site_url("admin2011/profile") ?>">Setting Profile</a>
-          <a class="dropdown-item" href="<?php echo site_url("admin2011/logout") ?>">Logout</a>
+          <a class="dropdown-item" href="<?php echo site_url("user/profile") ?>">Setting Profile</a>
+          <a class="dropdown-item" href="<?php echo site_url("user/logout") ?>">Logout</a>
         </div>
       </div>
     </li>

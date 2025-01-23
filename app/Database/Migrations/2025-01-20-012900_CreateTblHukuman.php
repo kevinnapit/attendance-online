@@ -18,6 +18,7 @@ class CreateTblHukuman extends Migration
             'id_user' => [
                 'type'       => 'INT',
                 'constraint' => 11,
+                'unsigned' => true
             ],
             'jenis_hukuman' => [
                 'type'       => 'VARCHAR',
@@ -33,7 +34,7 @@ class CreateTblHukuman extends Migration
 
         // Menambahkan primary key dan foreign key
         $this->forge->addPrimaryKey('id');
-        $this->forge->addForeignKey('id_user', 'tb_admin', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('id_user', 'tb_users', 'id', 'CASCADE', 'CASCADE');
 
         // Membuat tabel
         $this->forge->createTable('tbl_hukuman');

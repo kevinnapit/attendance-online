@@ -50,7 +50,7 @@ class CreateTblAnak extends Migration
 
         // Menambahkan key
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('id_user', 'users', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('id_user', 'tb_users', 'id', 'CASCADE', 'CASCADE');
 
         // Membuat tabel
         $this->forge->createTable('tbl_anak');

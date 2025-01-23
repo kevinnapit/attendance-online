@@ -29,7 +29,7 @@ class CreateFolderTable extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);  // Menjadikan 'id' sebagai primary key
-        $this->forge->addForeignKey('id_user', 'tbl_admin', 'id', 'CASCADE', 'CASCADE'); // Menambahkan foreign key ke tabel 'tbl_admin'
+        $this->forge->addForeignKey('id_user', 'tb_users', 'id', 'CASCADE', 'CASCADE'); // Menambahkan foreign key ke tabel 'tbl_admin'
         $this->forge->createTable('folder');
     }
 
