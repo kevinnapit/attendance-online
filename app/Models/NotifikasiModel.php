@@ -18,6 +18,7 @@ class NotifikasiModel extends Model
         'is_read',
         'created_at'
     ];
+    
     public function getUnreadNotificationsWithUser()
     {
         return $this->select('notifications.*, tb_admin.username')

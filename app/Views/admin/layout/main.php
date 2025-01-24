@@ -23,9 +23,13 @@
     <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url() ?>/favicon/favicon-16x16.png">
     <link rel="manifest" href="<?= base_url() ?>favicon/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
+
     <!-- ===============================================-->
+
     <!--    Stylesheets-->
+
     <!-- ===============================================-->
+
     <link href="<?= base_url() ?>assets/lib/flatpickr/flatpickr.min.css" rel="stylesheet">
 
     <script src="<?= base_url() ?>assets/js/config.navbar-vertical.js"></script>
@@ -159,7 +163,6 @@
         }
     </script>
     <script>
-        // Enable Pusher logging - disable this in production
         Pusher.logToConsole = true;
 
         // Initialize Pusher
@@ -167,31 +170,30 @@
             cluster: 'ap1'
         });
 
-        // Get user ID and role from session
+        // User ID (Admin) dari session
         var userId = "<?php echo session()->get('user_id'); ?>";
         var notificationContainer = document.getElementById('notification-container');
         var notificationCountElem = document.getElementById('notification-count');
 
-        // Subscribe to a universal channel for all users
-        var izinChannel = pusher.subscribe('izin-channel');
+        // Subscribe ke channel admin
+        var adminChannel = pusher.subscribe('admin-channel');
 
-        // Handle notifications for all users
-        izinChannel.bind('izin-added', function(data) {
-            if (data.targetId === userId) {
+        // Tangani notifikasi untuk admin
+        adminChannel.bind('izin-added', function(data) {
+            // Periksa jika notifikasi ditujukan untuk admin ini
+            if (data.targetId == userId) {
                 addNotificationToDropdown(data.message);
-
-                // Optional: Show a SweetAlert notification
                 showAlertNotification(data.message);
             }
         });
-        // Function to add a notification to the dropdown
+
         function addNotificationToDropdown(message) {
             var notificationHtml = `
-            <div class="notification-item">
-                <a href="/admin2011/notifikasi/index" style="text-decoration: none; color: inherit;">
-                    ${message}
-                </a>
-            </div>`;
+        <div class="notification-item">
+            <a href="/admin/notifikasi/index" style="text-decoration: none; color: inherit;">
+                ${message}
+            </a>
+        </div>`;
             notificationContainer.insertAdjacentHTML('beforeend', notificationHtml);
 
             // Update notification count
@@ -199,19 +201,19 @@
             notificationCountElem.textContent = currentCount + 1;
         }
 
-        // Function to show SweetAlert notification
         function showAlertNotification(message) {
             Swal.fire({
                 icon: 'info',
                 title: 'Notifikasi Baru',
                 text: message,
                 showConfirmButton: true,
-                confirmButtonText: '<a href="/admin2011/cutiizin/index" style="color:white;">Lihat Detail</a>',
+                confirmButtonText: 'Lihat Detail',
                 confirmButtonColor: '#3085d6',
                 showCloseButton: true
             });
         }
     </script>
+
 
     <?= $this->renderSection('script') ?>
 </body>

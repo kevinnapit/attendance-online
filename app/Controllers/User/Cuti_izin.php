@@ -124,34 +124,13 @@ class Cuti_izin extends BaseController
             case "add":
                 // Validasi input
                 $rules = [
-                    'type' => [
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Type harus diisi'
-                        ]
-                    ],
-                    'start_date' => [
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Tanggal Mulai harus diisi',
-                        ]
-                    ],
-                    'end_date' => [
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Tanggal Selesai harus diisi',
-                        ]
-                    ],
-                    'reason' => [
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Alasan Harus diisi'
-                        ]
-                    ]
+                    'type' => 'required',
+                    'start_date' => 'required',
+                    'end_date' => 'required',
+                    'reason' => 'required'
                 ];
                 if (!$this->validate($rules)) {
-                    $errors = $this->validator->getErrors();
-                    return $this->respond(['errors' => $errors], 400);
+                    return $this->respond(['errors' => $this->validator->getErrors()], 400);
                 }
 
                 // Data user dari session
@@ -166,64 +145,32 @@ class Cuti_izin extends BaseController
                     'end_date'   => $this->request->getVar('end_date'),
                     'reason'     => $this->request->getVar('reason'),
                 ];
-
                 $this->model->insert($requestData);
 
-                // Kirim notifikasi ke semua admin
-                $adminUsers = $this->admin->findAll(); // Ambil semua admin dari database
+                // Kirim notifikasi ke admin
+                $adminUsers = $this->admin->findAll();
                 foreach ($adminUsers as $admin) {
-                    $data['message'] = 'Izin baru telah diajukan oleh ' . $username;
-                    $this->pusher->trigger('admin-channel-' . $admin['id'], 'izin-added', $data); // Channel unik untuk admin
+                    $notifMessage = 'Izin baru telah diajukan oleh ' . $username;
+
+                    // Simpan ke database notifikasi
+                    $this->sendNotification($notifMessage, $admin['id']);
+
+                    // Kirim notifikasi ke Pusher
+                    $this->pusher->trigger('admin-channel', 'izin-added', [
+                        'message' => $notifMessage,
+                        'targetId' => $admin['id']
+                    ]);
                 }
 
-                // Kirim notifikasi ke user sendiri (opsional)
-                $message = 'Pengajuan Anda berhasil dikirim ke admin untuk disetujui.';
-                $this->pusher->trigger('user-channel-' . $user_id, 'izin-requested', ['message' => $message]);
+                // Kirim notifikasi ke user
+                $userNotifMessage = 'Pengajuan Anda berhasil dikirim ke admin.';
+                $this->sendNotification($userNotifMessage, $user_id);
+                $this->pusher->trigger('user-channel', 'izin-requested', [
+                    'message' => $userNotifMessage,
+                    'targetId' => $user_id
+                ]);
 
-                return $this->respond([
-                    'status' => 'success',
-                    'message' => 'Data inserted successfully'
-                ], 200);
-
-            case "update":
-                // Ambil data dari request
-                $user_id = session()->get('user_id');
-                $username = session()->get('user_name');
-                $status = $this->request->getVar('status');
-                $requestData = [
-                    'user_id'    => $user_id,
-                    'type'       => $this->request->getVar('type'),
-                    'start_date' => $this->request->getVar('start_date'),
-                    'end_date'   => $this->request->getVar('end_date'),
-                    'reason'     => $this->request->getVar('reason'),
-                    'status'     => $status
-                ];
-
-                $detail = $this->model->find($this->request->getVar('id'));
-                if ($detail) {
-                    $this->model->update($detail['id'], $requestData);
-
-                    // Kirim notifikasi ke semua admin
-                    $adminUsers = $this->admin->findAll(); // Ambil semua admin
-                    foreach ($adminUsers as $admin) {
-                        $data['message'] = 'Izin telah ' . $status . ' oleh ' . $username;
-                        $this->pusher->trigger('admin-channel-' . $admin['id'], 'izin-updated', $data);
-                    }
-
-                    // Kirim notifikasi ke user yang mengajukan izin
-                    $dataUser['message'] = 'Status permohonan izin Anda telah di' . strtolower($status) . ' oleh admin.';
-                    $this->pusher->trigger('user-channel-' . $detail['user_id'], 'izin-status-updated', $dataUser);
-
-                    return $this->respond([
-                        'status' => 'success',
-                        'message' => 'Data updated successfully'
-                    ], 200);
-                } else {
-                    return $this->respond([
-                        'status' => 'error',
-                        'message' => 'Data not found'
-                    ], 404);
-                }
+                return $this->respond(['status' => 'success', 'message' => 'Data inserted successfully'], 200);
         }
     }
 
@@ -244,5 +191,22 @@ class Cuti_izin extends BaseController
 
         // Trigger Pusher event
         $this->pusher->trigger('notification-channel', 'new-notification', $data);
+    }
+
+    public function getUnreadNotifications()
+    {
+        $notifikasiModel = new NotifikasiModel();
+
+        // Ambil data notifikasi yang belum dibaca untuk user tertentu
+        $userId = session()->get('user_id'); // Pastikan session berisi user_id
+        $unreadNotifications = $notifikasiModel->where('user_id', $userId)
+            ->where('is_read', 0)
+            ->findAll();
+
+        // Kembalikan data dalam bentuk JSON
+        return $this->response->setJSON([
+            'count' => count($unreadNotifications),
+            'notifications' => $unreadNotifications,
+        ]);
     }
 }

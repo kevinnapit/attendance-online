@@ -21,7 +21,7 @@
 
     <!-- navbar untuk notifikasi -->
     <li class="nav-item dropdown dropdown-on-hover">
-      <a class="nav-link notification-indicator notification-indicator-primary px-0 icon-indicator" id="navbarDropdownNotification" href="<?= base_url('user/cutiizin/index') ?>" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <a class="nav-link notification-indicator notification-indicator-primary px-0 icon-indicator" id="navbarDropdownNotification" href="<?= base_url('admin2011/cuti_izin/index') ?>" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
         <svg class="svg-inline--fa fa-bell fa-w-14 fs-4" data-fa-transform="shrink-6" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bell" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="" style="transform-origin: 0.4375em 0.5em;">
           <g transform="translate(224 256)">
             <g transform="translate(0, 0) scale(0.625, 0.625) rotate(0 0 0)">
@@ -61,3 +61,46 @@
     </li>
   </ul>
 </nav>
+
+<script>
+  $(document).ready(function() {
+    function fetchNotifications() {
+      $.ajax({
+        url: '<?= base_url('user/cuti_izin/getUnreadNotifications') ?>', // Endpoint untuk mengambil data
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+          // Perbarui notification count
+          $('#notification-count').text(response.count);
+
+          // Tambahkan notifikasi ke dropdown
+          var notificationContainer = $('#notification-container');
+          notificationContainer.empty(); // Kosongkan container terlebih dahulu
+
+          if (response.notifications.length > 0) {
+            response.notifications.forEach(function(notification) {
+              var notificationHtml = `
+                            <div class="notification-item">
+                                <a href="/admin/notifikasi/index" style="text-decoration: none; color: inherit;">
+                                    ${notification.message}
+                                </a>
+                            </div>`;
+              notificationContainer.append(notificationHtml);
+            });
+          } else {
+            notificationContainer.append('<p class="text-center">Tidak ada notifikasi baru.</p>');
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('Error fetching notifications:', error);
+        },
+      });
+    }
+
+    // Panggil fungsi fetchNotifications saat halaman dimuat
+    fetchNotifications();
+
+    // Refresh notifikasi setiap 30 detik (opsional)
+    setInterval(fetchNotifications, 30000);
+  });
+</script>
